@@ -14,19 +14,36 @@ import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { ScrollView } from "react-native";
 import { Blinds, ChevronDown, ChevronDownCircleIcon, FileWarning, Plus, PlusCircleIcon, Settings, Tablets, TriangleAlert } from "lucide-react-native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabLabels } from '@/app/navigation/NavigationTabs'
 
-const AccessScreen = ({
-  activeTab,
-  setActiveTab
-}: any) => {
-  return <>
+import { router } from "expo-router";
 
-    <VStack className={`px-5 py-4 flex- w-full ${activeTab == TabLabels.Access ? "flex" : "hidden"}`} space="lg">
+type AccessScreenProps = {
+  navigation : any;
+};
+
+const AccessScreen = (navigation : AccessScreenProps) => {
+
+  return <>
+    <VStack className={`px-5 py-4 flex- w-full `} space="lg">
       <Heading className="md">Acceso</Heading>
 
-      <NoAccessConfigured settActiveTab={setActiveTab} />
+      <NoAccessConfigured/>
+
+      <Button
+        action="secondary"
+        variant="outline"
+        onPress={() => {
+
+          // @ts-ignore
+          navigation.push('Add')
+          
+        }} >
+        <ButtonIcon as={PlusCircleIcon} />
+        <ButtonText>XDConfigurar dispositivo</ButtonText>
+      </Button>
     </VStack>
   </>;
 };
@@ -54,9 +71,11 @@ const NoAccessConfigured: React.FC<{settActiveTab?: (tab: string) => void;}> = (
         action="secondary"
         variant="outline"
         onPress={() => {
-          if (settActiveTab) {
-            settActiveTab(TabLabels.Add);
-          }
+
+          // @ts-ignore
+          router.push("accessscreen");
+() => navigation.push('Details')
+          
         }} >
         <ButtonIcon as={PlusCircleIcon} />
         <ButtonText>Configurar dispositivo</ButtonText>

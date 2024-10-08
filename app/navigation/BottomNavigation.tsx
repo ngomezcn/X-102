@@ -7,16 +7,17 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
 import { bottomTabs, TabLabels } from  './NavigationTabs'; // Adjust the import path
+import { useNavigation } from '@react-navigation/native';
+import {ParamListBase } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { useNavigationState } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
-interface BottomNavigationViewProps {
-  activeTab: TabLabels;                
-  setActiveTab: (tab: TabLabels) => void; 
-}
+const BottomNavigationView = () => {
 
-const BottomNavigationView: React.FC<BottomNavigationViewProps> = ({
-  activeTab,
-  setActiveTab,
-}) => {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
+  const xd = ""
 
   return (
     <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-6 md:hidden">
@@ -25,8 +26,11 @@ const BottomNavigationView: React.FC<BottomNavigationViewProps> = ({
           <Pressable
             key={tab.label}
             onPress={() => {
+
               if (!tab.disabled) {
-                setActiveTab(tab.label); // Set active tab using the enum
+                navigation.navigate(TabLabels.Add);
+
+                console.log(tab.label)
               }
             }}
             disabled={tab.disabled}
@@ -38,7 +42,7 @@ const BottomNavigationView: React.FC<BottomNavigationViewProps> = ({
                 as={tab.icon}
                 size="lg"
                 className={`${
-                  activeTab === tab.label
+                  TabLabels.Add === tab.label
                     ? "text-typography-900"
                     : "text-typography-400"
                 }`}
@@ -46,7 +50,7 @@ const BottomNavigationView: React.FC<BottomNavigationViewProps> = ({
               <Text
                 size="xs"
                 className={`${
-                  activeTab === tab.label
+                  TabLabels.Add === tab.label
                     ? "text-typography-900"
                     : "text-typography-400"
                 }`}
