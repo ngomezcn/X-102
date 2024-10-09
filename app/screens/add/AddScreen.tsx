@@ -24,7 +24,8 @@ import { ModalBody } from "@/components/ui/modal";
 import { ModalFooter } from "@/components/ui/modal";
 import { ScrollView } from "react-native";
 import { Blinds, BookKey, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileKey, FileWarning, GlobeIcon, Key, LucideQrCode, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, Settings, Tablets, TriangleAlert } from "lucide-react-native";
-import { TabLabels } from '@/app/navigation/NavigationTabs'
+import { NavigationTabs } from '@/app/navigation/NavigationTabs'
+import * as RootNavigation from '@/app/navigation/RootNavigation';
 
 const AddScreen = () => {
 
@@ -34,10 +35,13 @@ const AddScreen = () => {
   return <>
     <ScrollView >
       <VStack className="px-5 py-4 flex-1" space="lg">
+
         <Heading className="md">Añadir Gate</Heading>
 
         <Divider />
-        <PersonalInfoSection />
+
+        <AddOptions />
+        
         <Divider />
 
         <Box className="bg-background-50 p-4 rounded-md">
@@ -47,19 +51,17 @@ const AddScreen = () => {
           </Text>
         </Box>
 
-        
-
       </VStack>
-
     </ScrollView>
   </>;
 };
 
 export default AddScreen;
 
-const PersonalInfoSection = () => {
+const AddOptions = () => {
   return (
     <VStack space="lg">
+
       <HStack className="justify-between">
         <HStack space="md">
           <Icon as={ScanLine} />
@@ -68,19 +70,21 @@ const PersonalInfoSection = () => {
             <BadgeText>Recomendado</BadgeText>
           </Badge>
         </HStack>
-        <Pressable>
+        <Pressable onPress={() => RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)}>
           <Icon as={ChevronRight} />
         </Pressable>
       </HStack>
+
       <HStack className="justify-between">
         <HStack space="md">
           <Icon as={BookKey} />
           <Text>Introducir código de acceso</Text>
         </HStack>
-        <Pressable>
+        <Pressable onPress={() => RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)}>
           <Icon as={ChevronRight} />
         </Pressable>
       </HStack>
+
     </VStack>
   );
 };

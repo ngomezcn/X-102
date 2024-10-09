@@ -8,46 +8,53 @@ import {
   CircleHelp,
   Settings,
 } from "lucide-react-native";
+import StepCredentialsScreen from "../screens/add/steps/StepCredentialsScreen";
 
-export enum TabLabels {
+export enum NavigationTabs {
+  // Main Menu
   Add = "Add",
   Record = "Record",
   Access = "Access",
   Help = "Help",
   Settings = "Settings",
+
+  // Sub-pages
+  StepSetupInfoScreen = "SetupInfoScreen",
+  StepCredentialsScreen = "StepCredentialsScreen",
+  
 }
 
 // Update the BottomTab interface
 export interface BottomTab {
   icon: React.ElementType;   // Icon component type
-  label: TabLabels;          // The label must be one of the enum values
+  label: NavigationTabs;          // The label must be one of the enum values
   disabled?: boolean;        // Optional disabled property
 }
 
 export const bottomTabs: BottomTab[] = [
   {
     icon: Plus,
-    label: TabLabels.Add,
+    label: NavigationTabs.Add,
     disabled: false, // Example, set to true if you want this tab to be disabled
   },
   {
     icon: ScrollText,
-    label: TabLabels.Record,
+    label: NavigationTabs.Record,
     disabled: false,
   },
   {
     icon: Home,
-    label: TabLabels.Access,
+    label: NavigationTabs.Access,
     disabled: false,
   },
   {
     icon: CircleHelp,
-    label: TabLabels.Help,
+    label: NavigationTabs.Help,
     disabled: true, // Example of a disabled tab
   },
   {
     icon: Settings,
-    label: TabLabels.Settings,
+    label: NavigationTabs.Settings,
     disabled: false,
   },
 ];

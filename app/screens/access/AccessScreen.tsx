@@ -15,35 +15,18 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView } from "react-native";
 import { Blinds, ChevronDown, ChevronDownCircleIcon, FileWarning, Plus, PlusCircleIcon, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import { TabLabels } from '@/app/navigation/NavigationTabs'
-
+import { NavigationTabs } from '@/app/navigation/NavigationTabs'
 import { router } from "expo-router";
+import * as RootNavigation from '@/app/navigation/RootNavigation';
 
-type AccessScreenProps = {
-  navigation : any;
-};
-
-const AccessScreen = (navigation : AccessScreenProps) => {
+const AccessScreen = () => {
 
   return <>
     <VStack className={`px-5 py-4 flex- w-full `} space="lg">
       <Heading className="md">Acceso</Heading>
 
       <NoAccessConfigured/>
-
-      <Button
-        action="secondary"
-        variant="outline"
-        onPress={() => {
-
-          // @ts-ignore
-          navigation.push('Add')
-          
-        }} >
-        <ButtonIcon as={PlusCircleIcon} />
-        <ButtonText>XDConfigurar dispositivo</ButtonText>
-      </Button>
+      
     </VStack>
   </>;
 };
@@ -72,9 +55,7 @@ const NoAccessConfigured: React.FC<{settActiveTab?: (tab: string) => void;}> = (
         variant="outline"
         onPress={() => {
 
-          // @ts-ignore
-          router.push("accessscreen");
-() => navigation.push('Details')
+          RootNavigation.navigate(NavigationTabs.Add);
           
         }} >
         <ButtonIcon as={PlusCircleIcon} />
