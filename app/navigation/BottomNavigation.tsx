@@ -9,6 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import { bottomTabs } from './NavigationTabs'; // Ajusta la ruta de importación
 import * as RootNavigation from '@/app/navigation/RootNavigation';
 
+// TODO: Crear subscriber del navigation
 const BottomNavigationView = () => {
 
   const [currentRoute, setCurrentRoute] = useState(RootNavigation.getCurrentRoute());

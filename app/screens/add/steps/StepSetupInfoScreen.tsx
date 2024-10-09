@@ -11,7 +11,7 @@ import { Icon } from "@/components/ui/icon";
 import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { ScrollView } from "react-native";
 import { AlertCircleIcon, ArrowLeftIcon, ArrowRight, Blinds, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileWarning, GlobeIcon, Key, LucideQrCode, MapPin, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, SearchCheck, Settings, Tablets, TriangleAlert } from "lucide-react-native";
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable as RPressable, StyleSheet, View } from 'react-native';
 
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { StepsLayout } from './StepsLayout';
@@ -53,8 +53,7 @@ const StepSetupInfoScreen = () => {
 
             <VStack className="max-w-[440px] w-full" space="md">
                 <HStack className="md:items-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Pressable
-                        android_ripple={{ color: 'rgba(255, 255, 255, 0.2)' }} // Color del efecto de onda
+                    <RPressable
                         onPress={() => {
                             RootNavigation.goBack();
                         }}>
@@ -67,7 +66,7 @@ const StepSetupInfoScreen = () => {
                             />
                         )}
 
-                    </Pressable>
+                    </RPressable>
 
                     <Text className="text-background-800 font-medium">2/3</Text>
                 </HStack>
@@ -117,7 +116,9 @@ const StepSetupInfoScreen = () => {
                                 <InputField
                                     placeholder="C/ Eras 36, Madarcos, Madrid"
                                     value={inputAddress}
-                                    onChange={(e) => handleChangeAddress(e)}
+
+                                    // @ts-ignore
+                                    onChange={(e) => handleChangeAddress(e.target.value)}
                                 />
                             </Input>
                         </FormControl>
