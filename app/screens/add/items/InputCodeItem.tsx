@@ -28,16 +28,17 @@ interface VerificationModalProps {
     finalFocusRef: React.RefObject<any>;
 }
 
-const textAnimationData = [
-    { "texto": "Procesando solicitud...", "tiempo": 1000 },
-    { "texto": "Desencriptando...", "tiempo": 1300 },
-    { "texto": "Verificando...", "tiempo": 1900 },
-    { "texto": "Finalizando...", "tiempo": 600 }
-];
 
 const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
-    const [completed, setCompleted] = useState<boolean>(false); // Nuevo estado para saber si completó
+    const [completed, setCompleted] = useState<boolean>(false); 
+
+    const textAnimationData = [
+        { "texto": "Procesando solicitud...", "tiempo": 1000 },
+        { "texto": "Desencriptando...", "tiempo": 1300 },
+        { "texto": "Verificando...", "tiempo": 1900 },
+        { "texto": "Finalizando...", "tiempo": 600 }
+    ];
 
     useEffect(() => {
         if (isOpen) {
@@ -45,7 +46,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
 
             const completed = () => {
                 setDisplayText("Completado");
-                setCompleted(true); // Marca como completado
+                setCompleted(true); 
 
                 setTimeout(() => {
                     onClose()
@@ -67,11 +68,11 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                 }
             };
 
-            updateText(); // Comienza la animación
+            updateText(); 
 
             return () => {
-                currentIndex = 0; // Resetea el índice si el modal se cierra
-                setCompleted(false); // Resetear estado completado si el modal se cierra
+                currentIndex = 0; 
+                setCompleted(false); 
             };
         }
     }, [isOpen]);
@@ -104,8 +105,6 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                         <p className="text-md">{displayText}</p>
                     </HStack >
                 </ModalBody>
-
-
             </ModalContent>
         </Modal>
     );

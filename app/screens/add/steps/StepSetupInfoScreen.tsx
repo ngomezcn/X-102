@@ -114,7 +114,7 @@ const StepSetupInfoScreen = () => {
                                     <InputIcon as={MapPin} />
                                 </InputSlot>
                                 <InputField
-                                    placeholder="C/ Eras 36, Madarcos, Madrid"
+                                    placeholder="C/ Eras 36, Madarcos, Madrid (opcional)"
                                     value={inputAddress}
 
                                     // @ts-ignore
