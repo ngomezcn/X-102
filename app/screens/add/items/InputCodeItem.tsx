@@ -4,7 +4,7 @@ import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { TouchableRipple } from 'react-native-paper';
 import { Pressable as RPressable } from 'react-native';
-import { ArrowRight, BookKey, CheckCheck, ChevronRight } from "lucide-react-native";
+import { AlertTriangle, ArrowRight, BookKey, CheckCheck, ChevronRight } from "lucide-react-native";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
@@ -12,8 +12,13 @@ import { Heading } from "@/components/ui/heading";
 import { Spinner } from "@/components/ui/spinner";
 import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { NavigationTabs } from '@/app/navigation/NavigationTabs';
-import { FormControl, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
+import { FormControl, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText, FormControlError, FormControlErrorIcon, FormControlErrorText } from '@/components/ui/form-control';
 import { Input, InputField } from '@/components/ui/input';
+import { Keyboard } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 
 interface AccessCodeModalProps {
     isOpen: boolean;
@@ -21,6 +26,125 @@ interface AccessCodeModalProps {
     onContinue: () => void; // Nuevo prop para manejar el continuar
     finalFocusRef: React.RefObject<any>;
 }
+
+const loginSchema = z.object({
+    email: z.string().min(1, "Email is required"),
+});
+
+type LoginSchemaType = z.infer<typeof loginSchema>;
+
+const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onContinue, finalFocusRef }) => {
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<LoginSchemaType>({
+        resolver: zodResolver(loginSchema),
+    });
+    const toast = useToast();
+
+    const [validated, setValidated] = useState({
+        emailValid: true,
+    });
+
+    const onSubmit = (data: LoginSchemaType) => {
+        onContinue();
+        onClose();
+    };
+
+    return (
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            finalFocusRef={finalFocusRef}
+            size="md"
+        >
+            <ModalBackdrop />
+            <ModalContent>
+                <ModalHeader>
+                    <Heading size="md" className="text-typography-950">
+                        Introducir código de acceso
+                    </Heading>
+                    <ModalCloseButton>
+                        <Icon
+                            as={CloseIcon}
+                            size="md"
+                            className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
+                        />
+                    </ModalCloseButton>
+                </ModalHeader>
+                <ModalBody>
+                    <FormControl
+                        isInvalid={!!errors?.email || !validated.emailValid}
+                        className="w-full"
+                    >
+                        <FormControlLabel>
+                            <FormControlLabelText>Email</FormControlLabelText>
+                        </FormControlLabel>
+                        <Controller
+                            defaultValue=""
+                            name="email"
+                            control={control}
+                            rules={{
+                                validate: async (value) => {
+                                    try {
+                                        await loginSchema.parseAsync({ email: value });
+                                        return true;
+                                    } catch (error: any) {
+                                        return error.message;
+                                    }
+                                },
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+
+                                <Textarea>
+                                    <TextareaInput
+
+                                        //@ts-ignore
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder="Iq" />
+                                </Textarea>
+                            )}
+                        />
+                        <FormControlError>
+                            <FormControlErrorIcon as={AlertTriangle} />
+                            <FormControlErrorText>
+                                {errors?.email?.message ||
+                                    (!validated.emailValid && "Email ID not found")}
+                            </FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
+
+
+                    {/* 
+
+                    <FormControl size="sm">
+                        <Textarea>
+                            <TextareaInput
+
+                                //@ts-ignore
+                                onChange={(e) => handleTextArea(e.target.value)}
+                                placeholder="Iq" />
+                        </Textarea>
+                    </FormControl>*/}
+                </ModalBody>
+                <ModalFooter>
+                    <Button variant="outline" action="secondary" onPress={onClose} >
+                        <ButtonText>Cancelar</ButtonText>
+                    </Button>
+                    
+                    <Button onPress={handleSubmit(onSubmit)}>
+                        <ButtonText>Continuar</ButtonText>
+                        <ButtonIcon as={ArrowRight} />
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
+};
 
 interface VerificationModalProps {
     isOpen: boolean;
@@ -31,7 +155,7 @@ interface VerificationModalProps {
 
 const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
-    const [completed, setCompleted] = useState<boolean>(false); 
+    const [completed, setCompleted] = useState<boolean>(false);
 
     const textAnimationData = [
         { "texto": "Procesando solicitud...", "tiempo": 1000 },
@@ -46,7 +170,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
 
             const completed = () => {
                 setDisplayText("Completado");
-                setCompleted(true); 
+                setCompleted(true);
 
                 setTimeout(() => {
                     onClose()
@@ -68,11 +192,11 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                 }
             };
 
-            updateText(); 
+            updateText();
 
             return () => {
-                currentIndex = 0; 
-                setCompleted(false); 
+                currentIndex = 0;
+                setCompleted(false);
             };
         }
     }, [isOpen]);
@@ -102,7 +226,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                             <Spinner size="small" color="#5e5f5f" />
                         )}
 
-                        <p className="text-md">{displayText}</p>
+                       {/** <Text className="text-md">{displayText}</Text> */}
                     </HStack >
                 </ModalBody>
             </ModalContent>
@@ -110,77 +234,6 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
     );
 };
 
-const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onContinue, finalFocusRef }) => {
-
-    const [buttonIsEnabled, setButtonIsEnabled] = React.useState(false)
-    const [accessCode, setAccessCode] = React.useState("")
-
-    const handleTextArea = (value: any) => {
-
-        if (value.length < 1) {
-            setButtonIsEnabled(false)
-
-        } else {
-            setButtonIsEnabled(true)
-        }
-    }
-
-    return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            finalFocusRef={finalFocusRef}
-            size="md"
-        >
-            <ModalBackdrop />
-            <ModalContent>
-                <ModalHeader>
-                    <Heading size="md" className="text-typography-950">
-                        Introducir código de acceso
-                    </Heading>
-                    <ModalCloseButton>
-                        <Icon
-                            as={CloseIcon}
-                            size="md"
-                            className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
-                        />
-                    </ModalCloseButton>
-                </ModalHeader>
-                <ModalBody>
-
-                    <FormControl size="sm">
-                       {/*<FormControlLabel>
-                            <FormControlLabelText>Copie i pege el codigo aqui</FormControlLabelText>
-                        </FormControlLabel> */}
-                        <Textarea>
-                            
-                            <TextareaInput
-
-                                //@ts-ignore
-                                onChange={(e) => handleTextArea(e.target.value)}
-                                placeholder="Once upon a time..." />
-                        </Textarea>
-                        {/*<FormControlHelper>
-                            <FormControlHelperText>Copie i pegue el codigo</FormControlHelperText>
-                        </FormControlHelper> */}
-                    </FormControl>
-                </ModalBody>
-                <ModalFooter>
-                    <Button variant="outline" action="secondary" onPress={onClose} >
-                        <ButtonText>Cancelar</ButtonText>
-                    </Button>
-                    <Button isDisabled={!buttonIsEnabled} onPress={() => {
-                        onContinue();
-                        onClose();
-                    }}>
-                        <ButtonText>Continuar</ButtonText>
-                        <ButtonIcon as={ArrowRight} />
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
-    );
-};
 
 export const InputCodeItem = () => {
     const [showAccessModal, setShowAccessModal] = useState(false);
@@ -210,7 +263,7 @@ export const InputCodeItem = () => {
                 <AccessCodeModal
                     isOpen={showAccessModal}
                     onClose={() => setShowAccessModal(false)}
-                    onContinue={() => setShowVerificationModal(true)} // Abre el modal de verificación
+                    onContinue={() => setShowVerificationModal(true)}
                     finalFocusRef={accessModalRef}
                 />
                 <VerificationModal
