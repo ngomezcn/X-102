@@ -20,7 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
-import { setMac, setPin, setAccessCode } from '@/features/device/deviceSlice';
+import { setConnString, setMac, setPin, deviceNameInternal } from '@/features/device/deviceSlice';
 
 interface AccessCodeModalProps {
     isOpen: boolean;
@@ -148,6 +148,7 @@ interface VerificationModalProps {
 const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef, accessCode }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
     const [completed, setCompleted] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
     const textAnimationData = [
         { "texto": "Procesando solicitud...", "tiempo": 1000 },
@@ -168,6 +169,13 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                     onClose()
                     
                     // Aqui obtener accessCode y realizar las comprovaciones y coas para obtener el pin y la mac y posteriormente guardarlo en redux
+                    dispatch(setConnString(accessCode || ""));
+                    dispatch(setMac("data.accessCode"));
+                    dispatch(setPin("data.accessCode"));
+                    dispatch(deviceNameInternal("9037-XY"));
+
+
+
                     RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen);
 
                     RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)
