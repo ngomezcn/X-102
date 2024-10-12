@@ -13,8 +13,6 @@ import { Spinner } from "@/components/ui/spinner";
 import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { NavigationTabs } from '@/app/navigation/NavigationTabs';
 import { FormControl, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText, FormControlError, FormControlErrorIcon, FormControlErrorText } from '@/components/ui/form-control';
-import { Input, InputField } from '@/components/ui/input';
-import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,20 +20,20 @@ import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
 import { setConnString, setMac, setPin, deviceNameInternal } from '@/features/device/deviceSlice';
 
-interface AccessCodeModalProps {
+interface ConnStringModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onContinue: (accessCode: string) => void; 
+    onContinue: (connString: string) => void; 
     finalFocusRef: React.RefObject<any>;
 }
 
 const loginSchema = z.object({
-    accessCode: z.string().min(1, "Código de acceso requerido"),
+    connString: z.string().min(1, "Código de acceso requerido"),
 });
 
 type LoginSchemaType = z.infer<typeof loginSchema>;
 
-const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onContinue, finalFocusRef }) => {
+const ConnStringModal: React.FC<ConnStringModalProps> = ({ isOpen, onClose, onContinue, finalFocusRef }) => {
 
     const {
         control,
@@ -48,7 +46,7 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
     const toast = useToast();
 
     const onSubmit = (data: LoginSchemaType) => {
-        onContinue(data.accessCode);  
+        onContinue(data.connString);  
         onClose();
     };
 
@@ -75,18 +73,17 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
                 </ModalHeader>
                 <ModalBody>
                     <FormControl
-                        isInvalid={!!errors?.accessCode}
-                        className="w-full"
-                    >
+                        isInvalid={!!errors?.connString}
+                        className="w-full">
                         
                         <Controller
                             defaultValue=""
-                            name="accessCode"
+                            name="connString"
                             control={control}
                             rules={{
                                 validate: async (value) => {
                                     try {
-                                        await loginSchema.parseAsync({ accessCode: value });
+                                        await loginSchema.parseAsync({ connString: value });
                                         return true;
                                     } catch (error: any) {
                                         return error.message;
@@ -105,22 +102,11 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
                         <FormControlError>
                             <FormControlErrorIcon as={AlertTriangle} />
                             <FormControlErrorText>
-                                {errors?.accessCode?.message}
+                                {errors?.connString?.message}
                             </FormControlErrorText>
                         </FormControlError>
                     </FormControl>
 
-                    {/* 
-
-                    <FormControl size="sm">
-                        <Textarea>
-                            <TextareaInput
-
-                                //@ts-ignore
-                                onChange={(e) => handleTextArea(e.target.value)}
-                                placeholder="Iq" />
-                        </Textarea>
-                    </FormControl>*/}
                 </ModalBody>
                 <ModalFooter>
                     <Button variant="outline" action="secondary" onPress={onClose} >
@@ -141,11 +127,11 @@ interface VerificationModalProps {
     isOpen: boolean;
     onClose: () => void;
     finalFocusRef: React.RefObject<any>;
-    accessCode: string | null;  
+    connString: string | null;  
 }
 
 
-const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef, accessCode }) => {
+const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef, connString }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
     const [completed, setCompleted] = useState<boolean>(false);
     const dispatch = useDispatch();
@@ -168,13 +154,10 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                 setTimeout(() => {
                     onClose()
                     
-                    // Aqui obtener accessCode y realizar las comprovaciones y coas para obtener el pin y la mac y posteriormente guardarlo en redux
-                    dispatch(setConnString(accessCode || ""));
-                    dispatch(setMac("data.accessCode"));
-                    dispatch(setPin("data.accessCode"));
-                    dispatch(deviceNameInternal("9037-XY"));
-
-
+                    dispatch(setConnString(connString || ""));
+                    dispatch(setMac("data.connString"));
+                    dispatch(setPin("data.connString"));
+                    dispatch(deviceNameInternal("9037-XY"))
 
                     RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen);
 
@@ -242,10 +225,10 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
 export const InputCodeItem = () => {
     const [showAccessModal, setShowAccessModal] = useState(false);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
-    const accessModalRef = React.useRef(null); // Ref para el modal de acceso
-    const verificationModalRef = React.useRef(null); // Ref para el modal de verificación
+    const accessModalRef = React.useRef(null); 
+    const verificationModalRef = React.useRef(null);
 
-    const [accessCode, setAccessCode] = useState<string | null>(null); // Nuevo estado para el accessCode
+    const [connString, setConnString] = useState<string | null>(null);
 
     return (
         <TouchableRipple
@@ -266,11 +249,11 @@ export const InputCodeItem = () => {
                         />
                     )}
                 </RPressable>
-                <AccessCodeModal
+                <ConnStringModal
                     isOpen={showAccessModal}
                     onClose={() => setShowAccessModal(false)}
-                    onContinue={(code: string) => { // Modificamos onContinue para recibir el accessCode
-                        setAccessCode(code);        // Guardamos el accessCode en el estado
+                    onContinue={(code: string) => { 
+                        setConnString(code);        
                         setShowVerificationModal(true);
                     }}
                     finalFocusRef={accessModalRef}
@@ -279,7 +262,7 @@ export const InputCodeItem = () => {
                     isOpen={showVerificationModal}
                     onClose={() => setShowVerificationModal(false)}
                     finalFocusRef={verificationModalRef}
-                    accessCode={accessCode}         // Pasamos el accessCode al VerificationModal
+                    connString={connString}         
                 />
             </HStack>
         </TouchableRipple>
