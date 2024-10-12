@@ -28,7 +28,7 @@ interface AccessCodeModalProps {
 }
 
 const loginSchema = z.object({
-    email: z.string().min(1, "Email is required"),
+    accessCode: z.string().min(1, "Código de acceso requerido"),
 });
 
 type LoginSchemaType = z.infer<typeof loginSchema>;
@@ -45,11 +45,8 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
     });
     const toast = useToast();
 
-    const [validated, setValidated] = useState({
-        emailValid: true,
-    });
-
     const onSubmit = (data: LoginSchemaType) => {
+        // Guardar el codigo aqui en redux
         onContinue();
         onClose();
     };
@@ -77,20 +74,18 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
                 </ModalHeader>
                 <ModalBody>
                     <FormControl
-                        isInvalid={!!errors?.email || !validated.emailValid}
+                        isInvalid={!!errors?.accessCode}
                         className="w-full"
                     >
-                        <FormControlLabel>
-                            <FormControlLabelText>Email</FormControlLabelText>
-                        </FormControlLabel>
+                        
                         <Controller
                             defaultValue=""
-                            name="email"
+                            name="accessCode"
                             control={control}
                             rules={{
                                 validate: async (value) => {
                                     try {
-                                        await loginSchema.parseAsync({ email: value });
+                                        await loginSchema.parseAsync({ accessCode: value });
                                         return true;
                                     } catch (error: any) {
                                         return error.message;
@@ -98,26 +93,21 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
                                 },
                             }}
                             render={({ field: { onChange, onBlur, value } }) => (
-
                                 <Textarea>
                                     <TextareaInput
-
                                         //@ts-ignore
                                         value={value}
-                                        onChangeText={onChange}
-                                        placeholder="Iq" />
+                                        onChangeText={onChange}/>
                                 </Textarea>
                             )}
                         />
                         <FormControlError>
                             <FormControlErrorIcon as={AlertTriangle} />
                             <FormControlErrorText>
-                                {errors?.email?.message ||
-                                    (!validated.emailValid && "Email ID not found")}
+                                {errors?.accessCode?.message}
                             </FormControlErrorText>
                         </FormControlError>
                     </FormControl>
-
 
                     {/* 
 
@@ -174,6 +164,9 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
 
                 setTimeout(() => {
                     onClose()
+                    
+                    // Aqui voy a tener que volver a utilizarlo para hacer unas comprovaciones y posteriormente volver a guardarlo en redux
+
                     RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)
                 }, 1000);
             }

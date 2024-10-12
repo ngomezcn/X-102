@@ -40,7 +40,7 @@ const AppContainer = () => {
 
         <StatusBar
           barStyle={colorMode === "dark" ? "light-content" : "dark-content"}
-          backgroundColor={colorMode === "dark" ? "#171717" : "#E5E5E5"}/>
+          backgroundColor={colorMode === "dark" ? "#171717" : "#E5E5E5"} />
 
         <NavigationContainer ref={navigationRef} independent={true}>
 
@@ -58,8 +58,8 @@ const AppContainer = () => {
               <Stack.Screen name={NavigationTabs.Access} component={AccessScreen} />
 
               <Stack.Screen name={NavigationTabs.Add} component={AddScreen} />
-                  <Stack.Screen name={NavigationTabs.StepSetupInfoScreen} component={StepSetupInfoScreen} />
-                  <Stack.Screen name={NavigationTabs.StepCredentialsScreen} component={StepCredentialsScreen} />
+              <Stack.Screen name={NavigationTabs.StepSetupInfoScreen} component={StepSetupInfoScreen} />
+              <Stack.Screen name={NavigationTabs.StepCredentialsScreen} component={StepCredentialsScreen} />
 
             </Stack.Navigator>
 
