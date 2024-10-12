@@ -226,7 +226,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                             <Spinner size="small" color="#5e5f5f" />
                         )}
 
-                       {/** <Text className="text-md">{displayText}</Text> */}
+                        <Text className="text-md">{displayText}</Text> 
                     </HStack >
                 </ModalBody>
             </ModalContent>
