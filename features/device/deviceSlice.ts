@@ -1,25 +1,29 @@
-// src/store/deviceSlice.ts
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface DeviceState {
-    id: string;
+interface Device {
     mac: string;
     pin: string;
     deviceName: string;
     deviceNameInternal: string;
-    address: string;
+    deviceAddress: string;
     connString: string;
 }
 
+interface DeviceState {
+    devices: Device[];
+    currentDevice: Partial<Device>; // Permitir campos opcionales
+}
+
 const initialState: DeviceState = {
-    id: '',
-    mac: '',
-    pin: '',
-    deviceName: '',
-    deviceNameInternal: '',
-    address: '',
-    connString: '',
+    devices: [],
+    currentDevice: {
+        mac: '',
+        pin: '',
+        deviceName: '',
+        deviceNameInternal: '',
+        deviceAddress: '',
+        connString: '',
+    },
 };
 
 const deviceSlice = createSlice({
@@ -27,25 +31,73 @@ const deviceSlice = createSlice({
     initialState,
     reducers: {
         setConnString(state, action: PayloadAction<string>) {
-            state.connString = action.payload;
+            state.currentDevice.connString = action.payload;
         },
         setMac(state, action: PayloadAction<string>) {
-            state.mac = action.payload;
+            state.currentDevice.mac = action.payload;
+            addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         setPin(state, action: PayloadAction<string>) {
-            state.pin = action.payload;
+            state.currentDevice.pin = action.payload;
+            addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
-        deviceNameInternal(state, action: PayloadAction<string>) {
-            state.deviceNameInternal = action.payload;
+        setDeviceNameInternal(state, action: PayloadAction<string>) {
+            state.currentDevice.deviceNameInternal = action.payload;
+            addDeviceIfComplete(state); // Comprobar si se puede agregar
+        },
+        setDeviceName(state, action: PayloadAction<string>) {
+            state.currentDevice.deviceName = action.payload;
+            addDeviceIfComplete(state); // Comprobar si se puede agregar
+        },
+        setDeviceAddress(state, action: PayloadAction<string>) {
+            state.currentDevice.deviceAddress = action.payload;
+            addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         resetDevice(state) {
-            state.connString = '';
-            state.mac = '';
-            state.pin = '';
+            state.currentDevice = {
+                mac: '',
+                pin: '',
+                deviceName: '',
+                deviceNameInternal: '',
+                deviceAddress: '',
+                connString: '',
+            };
         },
     },
 });
 
-export const { setConnString, setMac, setPin, resetDevice, deviceNameInternal } = deviceSlice.actions;
+// Función auxiliar para comprobar si se puede agregar el dispositivo
+const addDeviceIfComplete = (state: DeviceState) => {
+    const { mac, pin, deviceName, deviceNameInternal, deviceAddress, connString } = state.currentDevice;
+
+    // Verificar si todos los campos están completos
+    if (mac && pin && deviceName && deviceNameInternal && deviceAddress && connString) {
+        // Agregar a la lista de dispositivos
+        state.devices.push({ ...state.currentDevice } as Device);
+        // Reiniciar el dispositivo actual
+        state.currentDevice = {
+            mac: '',
+            pin: '',
+            deviceName: '',
+            deviceNameInternal: '',
+            deviceAddress: '',
+            connString: '',
+        };
+
+        console.log("Agregando dispositov")
+
+    }
+
+};
+
+export const {
+    setConnString,
+    setMac,
+    setPin,
+    resetDevice,
+    setDeviceNameInternal,
+    setDeviceName,
+    setDeviceAddress
+} = deviceSlice.actions;
 
 export default deviceSlice.reducer;

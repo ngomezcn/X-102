@@ -18,8 +18,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AccessScreen from "./screens/access/AccessScreen";
 import AddScreen from "./screens/add/AddScreen";
 import { navigationRef } from './navigation/RootNavigation';
-import StepCredentialsScreen from "./screens/add/steps/StepCredentialsScreen";
-import StepSetupInfoScreen from "./screens/add/steps/StepSetupInfoScreen";
+import SetDeviceInfoScreen from "./screens/add/steps/SetDeviceInfoScreen";
+import * as RootNavigation from '@/app/navigation/RootNavigation';
+import PairDeviceScreen from "./screens/add/steps/PairDeviceScreen";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -47,7 +48,8 @@ const AppContainer = () => {
           <SafeAreaView className={`${colorMode === "light" ? "bg-white" : "bg-[#171717]"} flex-1 overflow-hidden`}>
 
             <Stack.Navigator
-              initialRouteName={NavigationTabs.Access}
+              //initialRouteName={NavigationTabs.Access}
+              initialRouteName={NavigationTabs.SetDeviceInfoScreen}
 
               screenOptions={{
                 headerShown: false,
@@ -58,8 +60,8 @@ const AppContainer = () => {
               <Stack.Screen name={NavigationTabs.Access} component={AccessScreen} />
 
               <Stack.Screen name={NavigationTabs.Add} component={AddScreen} />
-              <Stack.Screen name={NavigationTabs.StepSetupInfoScreen} component={StepSetupInfoScreen} />
-              <Stack.Screen name={NavigationTabs.StepCredentialsScreen} component={StepCredentialsScreen} />
+              <Stack.Screen name={NavigationTabs.SetDeviceInfoScreen} component={SetDeviceInfoScreen} />
+              <Stack.Screen name={NavigationTabs.PairDeviceScreen} component={PairDeviceScreen} />
 
             </Stack.Navigator>
 

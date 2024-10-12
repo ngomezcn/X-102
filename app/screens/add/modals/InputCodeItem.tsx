@@ -18,7 +18,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
-import { setConnString, setMac, setPin, deviceNameInternal } from '@/features/device/deviceSlice';
+import { VerificationModal } from "./VerificationModal"
+import { resetDevice } from '@/features/device/deviceSlice';
+
 
 interface ConnStringModalProps {
     isOpen: boolean;
@@ -27,26 +29,28 @@ interface ConnStringModalProps {
     finalFocusRef: React.RefObject<any>;
 }
 
-const loginSchema = z.object({
+const connStringSchema = z.object({
     connString: z.string().min(1, "Código de acceso requerido"),
 });
 
-type LoginSchemaType = z.infer<typeof loginSchema>;
+type ConnStringSchemaType = z.infer<typeof connStringSchema>;
 
 const ConnStringModal: React.FC<ConnStringModalProps> = ({ isOpen, onClose, onContinue, finalFocusRef }) => {
+    const dispatch = useDispatch();
 
     const {
         control,
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<LoginSchemaType>({
-        resolver: zodResolver(loginSchema),
+    } = useForm<ConnStringSchemaType>({
+        resolver: zodResolver(connStringSchema),
     });
-    const toast = useToast();
 
-    const onSubmit = (data: LoginSchemaType) => {
+    const onSubmit = (data: ConnStringSchemaType) => {
+        dispatch(resetDevice()); // Nos aseguramos que el objeto temporal no tiene datos
         onContinue(data.connString);  
+        reset();
         onClose();
     };
 
@@ -83,7 +87,7 @@ const ConnStringModal: React.FC<ConnStringModalProps> = ({ isOpen, onClose, onCo
                             rules={{
                                 validate: async (value) => {
                                     try {
-                                        await loginSchema.parseAsync({ connString: value });
+                                        await connStringSchema.parseAsync({ connString: value });
                                         return true;
                                     } catch (error: any) {
                                         return error.message;
@@ -122,105 +126,6 @@ const ConnStringModal: React.FC<ConnStringModalProps> = ({ isOpen, onClose, onCo
         </Modal>
     );
 };
-
-interface VerificationModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    finalFocusRef: React.RefObject<any>;
-    connString: string | null;  
-}
-
-
-const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef, connString }) => {
-    const [displayText, setDisplayText] = useState<string>("Please Wait");
-    const [completed, setCompleted] = useState<boolean>(false);
-    const dispatch = useDispatch();
-
-    const textAnimationData = [
-        { "texto": "Procesando solicitud...", "tiempo": 1000 },
-        { "texto": "Desencriptando...", "tiempo": 1300 },
-        { "texto": "Verificando...", "tiempo": 1900 },
-        { "texto": "Finalizando...", "tiempo": 600 }
-    ];
-
-    useEffect(() => {
-        if (isOpen) {
-            let currentIndex = 0;
-
-            const completed = () => {
-                setDisplayText("Completado");
-                setCompleted(true);
-
-                setTimeout(() => {
-                    onClose()
-                    
-                    dispatch(setConnString(connString || ""));
-                    dispatch(setMac("data.connString"));
-                    dispatch(setPin("data.connString"));
-                    dispatch(deviceNameInternal("9037-XY"))
-
-                    RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen);
-
-                    RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)
-                }, 1000);
-            }
-
-            const updateText = () => {
-                if (currentIndex < textAnimationData.length) {
-                    const { texto, tiempo } = textAnimationData[currentIndex];
-                    setDisplayText(texto);
-
-                    setTimeout(() => {
-                        currentIndex++;
-                        updateText();
-                    }, tiempo);
-                } else {
-                    completed();
-                }
-            };
-
-            updateText();
-
-            return () => {
-                currentIndex = 0;
-                setCompleted(false);
-            };
-        }
-    }, [isOpen]);
-
-    return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            finalFocusRef={finalFocusRef}
-            size="md"
-        >
-            <ModalBackdrop onPress={false ? onClose : undefined} />
-            <ModalContent>
-                <ModalHeader>
-                    <Heading size="md" className="text-typography-950 opacity-0">
-                        .
-                    </Heading>
-                </ModalHeader>
-
-                <ModalBody>
-                    <HStack space="sm" className="flex justify-center items-center space-x-2">
-
-
-                        {completed ? (
-                            <Icon as={CheckCheck} size="md" />
-                        ) : (
-                            <Spinner size="small" color="#5e5f5f" />
-                        )}
-
-                        <Text className="text-md">{displayText}</Text> 
-                    </HStack >
-                </ModalBody>
-            </ModalContent>
-        </Modal>
-    );
-};
-
 
 export const InputCodeItem = () => {
     const [showAccessModal, setShowAccessModal] = useState(false);

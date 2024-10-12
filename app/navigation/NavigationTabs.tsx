@@ -8,9 +8,9 @@ import {
   CircleHelp,
   Settings,
 } from "lucide-react-native";
-import StepCredentialsScreen from "../screens/add/steps/StepCredentialsScreen";
 
 export enum NavigationTabs {
+  
   // Main Menu
   Add = "Add",
   Record = "Record",
@@ -19,8 +19,8 @@ export enum NavigationTabs {
   Settings = "Settings",
 
   // Sub-pages
-  StepSetupInfoScreen = "SetupInfoScreen",
-  StepCredentialsScreen = "StepCredentialsScreen",
+  SetDeviceInfoScreen = "SetDeviceInfoScreen",
+  PairDeviceScreen = "PairDeviceScreen",
   
 }
 

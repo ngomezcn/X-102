@@ -16,8 +16,8 @@ import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { Icon } from "@/components/ui/icon";
 import { Pressable as RPressable } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
-import { ScanQrItem } from "./items/ScanQrItem";
-import { InputCodeItem } from "./items/InputCodeItem";
+import { ScanQrItem } from "./modals/ScanQrItem";
+import { InputCodeItem } from "./modals/InputCodeItem";
 
 const AddScreen = () => {
 
