@@ -19,11 +19,13 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { useDispatch } from 'react-redux'; 
+import { setMac, setPin, setAccessCode } from '@/features/device/deviceSlice';
 
 interface AccessCodeModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onContinue: () => void; // Nuevo prop para manejar el continuar
+    onContinue: (accessCode: string) => void; 
     finalFocusRef: React.RefObject<any>;
 }
 
@@ -46,8 +48,7 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onCo
     const toast = useToast();
 
     const onSubmit = (data: LoginSchemaType) => {
-        // Guardar el codigo aqui en redux
-        onContinue();
+        onContinue(data.accessCode);  
         onClose();
     };
 
@@ -140,10 +141,11 @@ interface VerificationModalProps {
     isOpen: boolean;
     onClose: () => void;
     finalFocusRef: React.RefObject<any>;
+    accessCode: string | null;  
 }
 
 
-const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef }) => {
+const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, finalFocusRef, accessCode }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
     const [completed, setCompleted] = useState<boolean>(false);
 
@@ -165,7 +167,8 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
                 setTimeout(() => {
                     onClose()
                     
-                    // Aqui voy a tener que volver a utilizarlo para hacer unas comprovaciones y posteriormente volver a guardarlo en redux
+                    // Aqui obtener accessCode y realizar las comprovaciones y coas para obtener el pin y la mac y posteriormente guardarlo en redux
+                    RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen);
 
                     RootNavigation.navigate(NavigationTabs.StepSetupInfoScreen)
                 }, 1000);
@@ -234,6 +237,8 @@ export const InputCodeItem = () => {
     const accessModalRef = React.useRef(null); // Ref para el modal de acceso
     const verificationModalRef = React.useRef(null); // Ref para el modal de verificación
 
+    const [accessCode, setAccessCode] = useState<string | null>(null); // Nuevo estado para el accessCode
+
     return (
         <TouchableRipple
             onPress={() => setShowAccessModal(true)}
@@ -256,13 +261,17 @@ export const InputCodeItem = () => {
                 <AccessCodeModal
                     isOpen={showAccessModal}
                     onClose={() => setShowAccessModal(false)}
-                    onContinue={() => setShowVerificationModal(true)}
+                    onContinue={(code: string) => { // Modificamos onContinue para recibir el accessCode
+                        setAccessCode(code);        // Guardamos el accessCode en el estado
+                        setShowVerificationModal(true);
+                    }}
                     finalFocusRef={accessModalRef}
                 />
                 <VerificationModal
                     isOpen={showVerificationModal}
                     onClose={() => setShowVerificationModal(false)}
                     finalFocusRef={verificationModalRef}
+                    accessCode={accessCode}         // Pasamos el accessCode al VerificationModal
                 />
             </HStack>
         </TouchableRipple>
