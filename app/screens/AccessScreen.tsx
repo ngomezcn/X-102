@@ -31,6 +31,7 @@ const AccessScreen = () => {
   return <>
     <VStack className={`px-5 py-4 flex- w-full `} space="lg">
       <Heading className="md">Acceso</Heading>
+      <Divider />
 
       {deviceList.length > 0 ? (
         <DeviceList  />
