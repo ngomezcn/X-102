@@ -39,13 +39,15 @@ if __name__ == "__main__":
     # Lista de archivos y directorios a excluir
     exclude_patterns = [
         'node_modules', 
-        'scrips', 
+        'scripts', 
         'assets', 
         '.*', 
         '*/sub_dir_to_exclude/*', 
-        'components',  
+        'ui',  
         'metro.config.js',
         'README.md',
+        'android',
+        'ios',
         'gluestack-ui.config.json',
         '.gitignore',
         'tailwind.config.js',
