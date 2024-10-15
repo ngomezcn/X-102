@@ -15,7 +15,7 @@ import * as Linking from "expo-linking";
 import HomestayPage from "./AppContainer";
 let defaultTheme: "dark" | "light" = "light";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AccessScreen from "./screens/access/AccessScreen";
+import AccessScreen from "./screens/AccessScreen";
 import AddScreen from "./screens/add/AddScreen";
 import { navigationRef } from './navigation/RootNavigation';
 import SetDeviceInfoScreen from "./screens/add/steps/SetDeviceInfoScreen";
@@ -48,8 +48,7 @@ const AppContainer = () => {
           <SafeAreaView className={`${colorMode === "light" ? "bg-white" : "bg-[#171717]"} flex-1 overflow-hidden`}>
 
             <Stack.Navigator
-              //initialRouteName={NavigationTabs.Access}
-              initialRouteName={NavigationTabs.SetDeviceInfoScreen}
+              initialRouteName={NavigationTabs.Access}
 
               screenOptions={{
                 headerShown: false,

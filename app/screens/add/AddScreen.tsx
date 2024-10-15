@@ -16,8 +16,8 @@ import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { Icon } from "@/components/ui/icon";
 import { Pressable as RPressable } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
-import { ScanQrItem } from "./modals/ScanQrItem";
-import { InputCodeItem } from "./modals/InputCodeItem";
+import { ScanQrItem } from "../../../components/add/qr/ScanQrItem";
+import { ConnStringManager } from "../../../components/add/connString/ConnStringManager";
 
 const AddScreen = () => {
 
@@ -31,7 +31,7 @@ const AddScreen = () => {
 
         <VStack space="lg">
           <ScanQrItem />
-          <InputCodeItem />
+          <ConnStringManager />
         </VStack>
 
         <Divider />

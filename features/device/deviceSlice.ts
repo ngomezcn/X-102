@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Device {
     mac: string;
-    pin: string;
+    password: string;
     deviceName: string;
     deviceNameInternal: string;
     deviceAddress: string;
@@ -10,20 +10,22 @@ interface Device {
 }
 
 interface DeviceState {
-    devices: Device[];
+    devices: Record<string, Device>; // Almacenar dispositivos usando MAC como clave
     currentDevice: Partial<Device>; // Permitir campos opcionales
+    error: string | null; // Manejo de errores
 }
 
 const initialState: DeviceState = {
-    devices: [],
+    devices: {},
     currentDevice: {
         mac: '',
-        pin: '',
+        password: '',
         deviceName: '',
         deviceNameInternal: '',
         deviceAddress: '',
         connString: '',
     },
+    error: null, // Inicialmente sin errores
 };
 
 const deviceSlice = createSlice({
@@ -32,72 +34,93 @@ const deviceSlice = createSlice({
     reducers: {
         setConnString(state, action: PayloadAction<string>) {
             state.currentDevice.connString = action.payload;
+            state.error = null; // Reiniciar error
         },
         setMac(state, action: PayloadAction<string>) {
             state.currentDevice.mac = action.payload;
+            state.error = null; // Reiniciar error
             addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
-        setPin(state, action: PayloadAction<string>) {
-            state.currentDevice.pin = action.payload;
+        setPassword(state, action: PayloadAction<string>) {
+            state.currentDevice.password = action.payload;
+            state.error = null; // Reiniciar error
             addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         setDeviceNameInternal(state, action: PayloadAction<string>) {
             state.currentDevice.deviceNameInternal = action.payload;
+            state.error = null; // Reiniciar error
             addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         setDeviceName(state, action: PayloadAction<string>) {
             state.currentDevice.deviceName = action.payload;
+            state.error = null; // Reiniciar error
             addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         setDeviceAddress(state, action: PayloadAction<string>) {
             state.currentDevice.deviceAddress = action.payload;
+            state.error = null; // Reiniciar error
             addDeviceIfComplete(state); // Comprobar si se puede agregar
         },
         resetDevice(state) {
             state.currentDevice = {
                 mac: '',
-                pin: '',
+                password: '',
                 deviceName: '',
                 deviceNameInternal: '',
                 deviceAddress: '',
                 connString: '',
             };
+            state.error = null; // Reiniciar error
+        },
+        removeDevice(state, action: PayloadAction<string>) {
+            const macToRemove = action.payload;
+            if (state.devices[macToRemove]) {
+                delete state.devices[macToRemove]; // Eliminar dispositivo usando MAC
+                console.log(`Dispositivo con MAC ${macToRemove} eliminado`);
+            } else {
+                state.error = `Error: No se encontró ningún dispositivo con la MAC ${macToRemove}`; // Establecer mensaje de error
+            }
         },
     },
 });
 
-// Función auxiliar para comprobar si se puede agregar el dispositivo
 const addDeviceIfComplete = (state: DeviceState) => {
-    const { mac, pin, deviceName, deviceNameInternal, deviceAddress, connString } = state.currentDevice;
+    const { mac, password, deviceName, deviceNameInternal, deviceAddress, connString } = state.currentDevice;
 
-    // Verificar si todos los campos están completos
-    if (mac && pin && deviceName && deviceNameInternal && deviceAddress && connString) {
-        // Agregar a la lista de dispositivos
-        state.devices.push({ ...state.currentDevice } as Device);
-        // Reiniciar el dispositivo actual
+    // El deviceAddress es opcional
+
+    if (mac && password && deviceName && deviceNameInternal && connString) {
+       
+        if (state.devices[mac]) {
+            state.error = `Error: Ya existe un dispositivo con la MAC ${mac}`; 
+            console.log(`Error: Ya existe un dispositivo con la MAC ${mac}`)
+            return; 
+        }
+
+        state.devices[mac] = { ...state.currentDevice } as Device;
+
         state.currentDevice = {
             mac: '',
-            pin: '',
+            password: '',
             deviceName: '',
             deviceNameInternal: '',
             deviceAddress: '',
             connString: '',
         };
 
-        console.log("Agregando dispositov")
-
+        console.log("Agregando dispositivo");
     }
-
 };
 
 export const {
     setConnString,
     setMac,
-    setPin,
+    setPassword,
     resetDevice,
     setDeviceNameInternal,
     setDeviceName,
-    setDeviceAddress
+    setDeviceAddress,
+    removeDevice, 
 } = deviceSlice.actions;
 
 export default deviceSlice.reducer;

@@ -46,12 +46,13 @@ const SetDeviceInfoScreen = () => {
 
     const onSubmit = (data: InputSchemaType) => {
 
-        dispatch(setDeviceName(data.deviceName));
-        dispatch(setDeviceAddress(data.deviceAddress || ""));
+        const address = data.deviceAddress !== undefined ? data.deviceAddress : '';
+        dispatch(setDeviceAddress(address));
+        dispatch(setDeviceName(data.deviceName)); // SIEMPRE PASAR EL DEVICE NAME COMO SEGUNDO
+ 
+       reset();
 
-        reset();
-
-        RootNavigation.navigate(NavigationTabs.PairDeviceScreen)
+        RootNavigation.navigate(NavigationTabs.Access)
     };
 
     return (

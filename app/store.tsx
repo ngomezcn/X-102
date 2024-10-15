@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import deviceReducer from '../features/device/deviceSlice';
 
 const persistConfig = {
-  key: 'root',
+  key: 'rootxd',
   storage: AsyncStorage,
 };
 
