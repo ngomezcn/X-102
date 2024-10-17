@@ -2,7 +2,7 @@ import { Device } from 'react-native-ble-plx';
 import React, { useEffect, useState } from "react";
 import { PermissionsAndroid, Alert, Button, View } from "react-native";
 
-import { BLEManager } from '@/components/BLEManagerService';
+import { BLEManager } from '@/components/BluetoothService';
 import { LogBox } from 'react-native';
 import log from '@/components/logger'; // Importa el logger
 import { Provider } from 'react-redux';
