@@ -23,6 +23,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { NoDevicesMessage } from '@/components/access/NoDevicesMessage';
 import { DeviceList } from '@/components/access/DeviceList';
+import { SingleDevice } from '@/components/access/SingleDevice';
+
 
 const AccessScreen = () => {
   const devices = useSelector((state: RootState) => state.device.devices);
@@ -33,11 +35,14 @@ const AccessScreen = () => {
       <Heading className="md">Acceso</Heading>
       <Divider />
 
-      {deviceList.length > 0 ? (
-        <DeviceList  />
+      {deviceList.length > 1 ? (
+        <DeviceList />
+      ) : deviceList.length === 1 ? (
+        <SingleDevice /> 
       ) : (
         <NoDevicesMessage />
       )}
+
 
     </VStack>
   </>;

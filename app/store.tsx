@@ -9,19 +9,25 @@ const persistConfig = {
   storage: AsyncStorage,
 };
 
+// Configuramos el reducer persistente
 const persistedReducer = persistReducer(persistConfig, deviceReducer);
 
+// Configuramos el store
 const store = configureStore({
   reducer: {
-
-    device: persistedReducer, 
-
+    device: persistedReducer,
   },
+  middleware: (getDefaultMiddleware) => // TODO: REVISAR LO DEL MIDDLEWARE ANTES DE PRODUCCION
+    getDefaultMiddleware({
+      serializableCheck: false, 
+    }),
 });
 
+// Tipos de estado y dispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
+// Crear el persistor
 export const persistor = persistStore(store);
 
 export default store;
