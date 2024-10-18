@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setConnString, setMac, setPassword, setDeviceNameInternal } from '@/store/slices/deviceSlice';
 import { useToastUtil } from '@/components/ToastUtil';
 import { RootState } from '@/store/store';
-import { AppRoutes } from '@/utils/AppRoutes';
+import { AppRoutes } from '@/constants/AppRoutes';
 import { CheckCheck } from 'lucide-react-native';
 import { CryptoManager } from '@/components/CryptoManager'
 import NavigationService from '@/services/NavigationService';

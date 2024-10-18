@@ -6,10 +6,11 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
-import { bottomTabs } from '@/utils/AppRoutes'; // Ajusta la ruta de importación
+import { bottomTabs } from '@/constants/AppRoutes'; // Ajusta la ruta de importación
 import NavigationService from "@/services/NavigationService";
+import { tabRoutes } from "@/constants/TabRoutes";
+import { AppRoutes } from "@/constants/AppRoutes";
 
-// TODO: Crear subscriber del navigation
 const BottomNavigationView = () => {
 
   const [currentRoute, setCurrentRoute] = useState(NavigationService.getCurrentRoute());
@@ -18,6 +19,12 @@ const BottomNavigationView = () => {
     setCurrentRoute(label);
     NavigationService.navigate(label); 
   };
+
+  const isTabVisible = tabRoutes.includes(currentRoute);
+
+  if (!isTabVisible) {
+    //return null;
+  }
 
   return (
     <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-6 md:hidden">

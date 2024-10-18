@@ -10,7 +10,7 @@ import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalCloseButton, Moda
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { Heading } from "@/components/ui/heading";
 import { Spinner } from "@/components/ui/spinner";
-import { AppRoutes } from '@/utils/AppRoutes';
+import { AppRoutes } from '@/constants/AppRoutes';
 import { FormControl, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText, FormControlError, FormControlErrorIcon, FormControlErrorText } from '@/components/ui/form-control';
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";

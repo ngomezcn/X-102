@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box } from '@/components/ui/box';
 import BottomNavigationView from "@/components/navigation/BottomNavigation";
 
-import { AppRoutes } from '@/utils/AppRoutes'
+import { AppRoutes } from '@/constants/AppRoutes'
 import { NavigationContainer } from '@react-navigation/native';
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
@@ -28,13 +28,15 @@ const AppContainer = () => {
     defaultTheme
   );
 
+  NavigationService.navigate(AppRoutes.Access)
+
   return (
     <>
       <GluestackUIProvider mode={colorMode}>
 
         <StatusBar style="dark" backgroundColor="#fff" />
 
-        <NavigationContainer ref={NavigationService.navigationRef} independent={true}>
+        <NavigationContainer ref={NavigationService.getRef()} independent={true}>
 
           <SafeAreaView style={{ flex: 1, paddingTop: 15 }}>
 

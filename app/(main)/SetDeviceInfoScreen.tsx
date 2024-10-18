@@ -20,7 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from 'react-redux';
 import { setDeviceName, setDeviceAddress, } from '@/store/slices/deviceSlice';
-import { AppRoutes } from '@/utils/AppRoutes';
+import { AppRoutes } from '@/constants/AppRoutes';
 import NavigationService from '@/services/NavigationService';
 
 const inputSchema = z.object({

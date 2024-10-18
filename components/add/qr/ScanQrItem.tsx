@@ -13,7 +13,7 @@ import { ButtonText } from "@/components/ui/button";
 import { BadgeText } from "@/components/ui/badge";
 import { ScrollView } from "react-native";
 import { ArrowRight, Blinds, BookKey, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileKey, FileWarning, GlobeIcon, Key, LucideQrCode, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, Settings, Tablets, TriangleAlert } from "lucide-react-native";
-import { AppRoutes } from '@/utils/AppRoutes'
+import { AppRoutes } from '@/constants/AppRoutes'
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Pressable as RPressable } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';

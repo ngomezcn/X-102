@@ -1,7 +1,9 @@
+import { AppRoutes } from '@/constants/AppRoutes';
+import log from '@/utils/logger';
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 class NavigationService {
-  public static navigationRef = createNavigationContainerRef();
+  private static navigationRef = createNavigationContainerRef();
 
   static getRef() {
     return this.navigationRef;
@@ -13,10 +15,10 @@ class NavigationService {
 
   static navigate(routeName: string, params?: object) {
     if (this.isReady()) {
-      console.log(`Navegando a: ${routeName}`);
+      log.debug(`Navegando a: ${routeName}`);
       this.navigationRef.navigate(routeName, params);
     } else {
-      console.warn('Referencia de navegación no está lista');
+      log.warn('Referencia de navegación no está lista');
     }
   }
 
@@ -26,16 +28,16 @@ class NavigationService {
       return currentRoute ? currentRoute.name : "";
     }
 
-    console.warn('Referencia de navegación no está lista');
-    return "Access";
+    log.warn('Referencia de navegación no está lista, devolviendo default ' + AppRoutes.Access);
+    return AppRoutes.Access;
   }
 
   static goBack() {
     if (this.isReady()) {
-      console.log('Regresando a la ruta anterior');
+      log.debug('Regresando a la ruta anterior');
       this.navigationRef.goBack();
     } else {
-      console.warn('Referencia de navegación no está lista');
+      log.warn('Referencia de navegación no está lista');
     }
   }
 }

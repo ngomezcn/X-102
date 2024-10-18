@@ -15,7 +15,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView, View } from "react-native";
 import { Blinds, ChevronDown, ChevronDownCircleIcon, FileWarning, Plus, PlusCircleIcon, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AppRoutes } from '@/utils/AppRoutes'
+import { AppRoutes } from '@/constants/AppRoutes'
 import { router } from "expo-router";
 import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
