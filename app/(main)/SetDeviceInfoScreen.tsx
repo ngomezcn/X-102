@@ -8,20 +8,20 @@ import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 //import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { ScrollView } from "react-native";
 import { AlertCircleIcon, AlertTriangle, ArrowLeftIcon, ArrowRight, Blinds, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileWarning, GlobeIcon, Key, LucideQrCode, MapPin, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, SearchCheck, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { Pressable as RPressable, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { StepsLayout } from './StepsLayout';
-import { RootState } from "@/app/store"
+import { StepsLayout } from '../../components/add/StepsLayout';
+import { RootState } from "@/store/store"
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from 'react-redux';
-import { setDeviceName, setDeviceAddress, } from '@/features/device/deviceSlice';
-import { NavigationTabs } from '@/app/navigation/NavigationTabs';
+import { setDeviceName, setDeviceAddress, } from '@/store/slices/deviceSlice';
+import { AppRoutes } from '@/utils/AppRoutes';
+import NavigationService from '@/services/NavigationService';
 
 const inputSchema = z.object({
     deviceName: z.string().min(1, "Información obligatoria"),
@@ -52,7 +52,7 @@ const SetDeviceInfoScreen = () => {
  
        reset();
 
-        RootNavigation.navigate(NavigationTabs.Access)
+        NavigationService.navigate(AppRoutes.Access)
     };
 
     return (
@@ -62,7 +62,7 @@ const SetDeviceInfoScreen = () => {
                 <HStack className="md:items-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
                     <RPressable
                         onPress={() => {
-                            RootNavigation.goBack();
+                            NavigationService.goBack();
                         }}>
 
                         {({ pressed }) => (

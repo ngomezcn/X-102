@@ -15,12 +15,12 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView, View } from "react-native";
 import { Blinds, ChevronDown, ChevronDownCircleIcon, FileWarning, Plus, PlusCircleIcon, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationTabs } from '@/app/navigation/NavigationTabs'
+import { AppRoutes } from '@/utils/AppRoutes'
 import { router } from "expo-router";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
+import { RootState } from '@/store/store';
+import NavigationService from '@/services/NavigationService';
 
 export const NoDevicesMessage: React.FC<{ settActiveTab?: (tab: string) => void; }> = ({ settActiveTab }) => {
   const devices = useSelector((state: RootState) => state.device.devices);
@@ -45,7 +45,7 @@ export const NoDevicesMessage: React.FC<{ settActiveTab?: (tab: string) => void;
         variant="outline"
         onPress={() => {
 
-          RootNavigation.navigate(NavigationTabs.Add);
+          NavigationService.navigate(AppRoutes.Add);
 
         }} >
         <ButtonIcon as={PlusCircleIcon} />

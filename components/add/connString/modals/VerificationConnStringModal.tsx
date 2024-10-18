@@ -3,16 +3,16 @@ import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { Spinner } from "@/components/ui/spinner";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody } from "@/components/ui/modal";
 import { Heading } from "@/components/ui/heading";
 import { useDispatch, useSelector } from 'react-redux';
-import { setConnString, setMac, setPassword, setDeviceNameInternal } from '@/features/device/deviceSlice';
+import { setConnString, setMac, setPassword, setDeviceNameInternal } from '@/store/slices/deviceSlice';
 import { useToastUtil } from '@/components/ToastUtil';
-import { RootState } from '@/app/store';
-import { NavigationTabs } from '@/app/navigation/NavigationTabs';
+import { RootState } from '@/store/store';
+import { AppRoutes } from '@/utils/AppRoutes';
 import { CheckCheck } from 'lucide-react-native';
 import { CryptoManager } from '@/components/CryptoManager'
+import NavigationService from '@/services/NavigationService';
 
 interface VerificationConnStringModalProps {
     isOpen: boolean;
@@ -75,7 +75,7 @@ export const VerificationConnStringModal: React.FC<VerificationConnStringModalPr
             setCompleted(true);
             await updateDisplayText("Finalizado", 100);
 
-            RootNavigation.navigate(NavigationTabs.SetDeviceInfoScreen);
+            NavigationService.navigate(AppRoutes.SetDeviceInfoScreen);
 
             setTimeout(() => {
                 onClose();

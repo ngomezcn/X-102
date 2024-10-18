@@ -15,22 +15,25 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView, View } from "react-native";
 import { Blinds, ChevronDown, ChevronDownCircleIcon, FileWarning, Plus, PlusCircleIcon, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationTabs } from '@/app/navigation/NavigationTabs'
+import { AppRoutes } from '@/utils/AppRoutes'
 import { router } from "expo-router";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
 import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
+import { RootState } from '@/store/store';
 import { NoDevicesMessage } from '@/components/access/NoDevicesMessage';
 import { DeviceList } from '@/components/access/DeviceList';
 import { SingleDevice } from '@/components/access/SingleDevice';
+import { Grid, GridItem } from "@/components/ui/grid"
+import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import log from '@/utils/logger';
 
 
-const AccessScreen = () => {
+const Access = () => {
   const devices = useSelector((state: RootState) => state.device.devices);
   const deviceList = Object.values(devices);
 
-  return <>
+  return (
     <VStack className={`px-5 py-4 flex- w-full `} space="lg">
       <Heading className="md">Acceso</Heading>
       <Divider />
@@ -38,13 +41,12 @@ const AccessScreen = () => {
       {deviceList.length > 1 ? (
         <DeviceList />
       ) : deviceList.length === 1 ? (
-        <SingleDevice /> 
+        <SingleDevice />
       ) : (
         <NoDevicesMessage />
       )}
 
-
     </VStack>
-  </>;
+  );
 };
-export default AccessScreen;
+export default Access;

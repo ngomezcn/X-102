@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Box } from '@/components/ui/box';
-import BottomNavigationView from "@/app/navigation/BottomNavigation";
+import BottomNavigationView from "@/components/navigation/BottomNavigation";
 
-import { NavigationTabs } from '@/app/navigation/NavigationTabs'
+import { AppRoutes } from '@/utils/AppRoutes'
 import { NavigationContainer } from '@react-navigation/native';
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { StatusBar } from "@/components/ui/status-bar";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
@@ -15,12 +14,12 @@ import * as Linking from "expo-linking";
 import HomestayPage from "./AppContainer";
 let defaultTheme: "dark" | "light" = "light";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AccessScreen from "./screens/AccessScreen";
-import AddScreen from "./screens/add/AddScreen";
-import { navigationRef } from './navigation/RootNavigation';
-import SetDeviceInfoScreen from "./screens/add/steps/SetDeviceInfoScreen";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
-import PairDeviceScreen from "./screens/add/steps/PairDeviceScreen";
+import Access from "./(main)/Access";
+import AddScreen from "./(main)/Add";
+import SetDeviceInfoScreen from "./(main)/SetDeviceInfoScreen";
+import NavigationService from "../services/NavigationService";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Text } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,35 +29,39 @@ const AppContainer = () => {
   );
 
   return (
-    <GluestackUIProvider mode={colorMode}>
+    <>
+      <GluestackUIProvider mode={colorMode}>
 
-      <SafeAreaView style={{ flex: 1, paddingTop: 15 }}> 
+        <StatusBar style="dark" backgroundColor="#fff" />
 
-        <NavigationContainer ref={navigationRef} independent={true}>
-          <Stack.Navigator
-            initialRouteName={NavigationTabs.Access}
+        <NavigationContainer ref={NavigationService.navigationRef} independent={true}>
 
-            screenOptions={{
-              headerShown: false,
-              header: () => null,
-              contentStyle: { backgroundColor: 'white' },
-            }}>
+          <SafeAreaView style={{ flex: 1, paddingTop: 15 }}>
 
-            <Stack.Screen name={NavigationTabs.Access} component={AccessScreen} />
+            <Stack.Navigator
+              initialRouteName={AppRoutes.Access}
 
-            <Stack.Screen name={NavigationTabs.Add} component={AddScreen} />
-            <Stack.Screen name={NavigationTabs.SetDeviceInfoScreen} component={SetDeviceInfoScreen} />
-            <Stack.Screen name={NavigationTabs.PairDeviceScreen} component={PairDeviceScreen} />
+              screenOptions={{
+                headerShown: false,
+                header: () => null,
+                contentStyle: { backgroundColor: 'white' },
+              }}>
 
-          </Stack.Navigator>
-          
+              <Stack.Screen name={AppRoutes.Access} component={Access} />
+
+              <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
+              <Stack.Screen name={AppRoutes.SetDeviceInfoScreen} component={SetDeviceInfoScreen} />
+
+            </Stack.Navigator>
+
+            <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
+              <BottomNavigationView />
+            </Box>
+
+          </SafeAreaView>
         </NavigationContainer>
-        <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
-            <BottomNavigationView />
-          </Box>
-      </SafeAreaView>
-
-    </GluestackUIProvider>
+      </GluestackUIProvider>
+    </>
   );
 };
 export default AppContainer;

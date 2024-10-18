@@ -10,8 +10,7 @@ import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalCloseButton, Moda
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { Heading } from "@/components/ui/heading";
 import { Spinner } from "@/components/ui/spinner";
-import * as RootNavigation from '@/app/navigation/RootNavigation';
-import { NavigationTabs } from '@/app/navigation/NavigationTabs';
+import { AppRoutes } from '@/utils/AppRoutes';
 import { FormControl, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText, FormControlError, FormControlErrorIcon, FormControlErrorText } from '@/components/ui/form-control';
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -19,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
 import { VerificationConnStringModal } from "./VerificationConnStringModal"
-import { resetDevice } from '@/features/device/deviceSlice';
+import { resetDevice } from '@/store/slices/deviceSlice';
 
 const inputConnStringModalSchema = z.object({
     connString: z.string().min(1, "Código de acceso requerido"),
