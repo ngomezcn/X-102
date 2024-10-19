@@ -40,14 +40,8 @@ const Access = () => {
     };
   }, []);
 
-
-
-
   return (
-
     <>
-
-
         {showSingleDevice ? (
           <Profile deviceId={singleDeviceParam} />
         ) : deviceList.length > 1 ? (

@@ -37,7 +37,7 @@ const AddScreen = () => {
 
         <Box className="bg-background-50 p-4 rounded-md">
           <Text className="text-center font-medium">
-          Para acceder, necesitas un código QR o un código de acceso. Agrégalo y tu acceso estará configurado de forma segura.
+            Para acceder, necesitas un código QR o un código de acceso. Agrégalo y tu acceso estará configurado de forma segura.
           </Text>
         </Box>
 

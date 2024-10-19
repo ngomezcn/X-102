@@ -87,11 +87,6 @@ export const SingleDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
   return (
     <>
 
-
-      
-
-
-
       {/* <VStack space="lg">
         <TouchableRipple
           onPress={() => NavigationService.navigate(AppRoutes.ToDo)}

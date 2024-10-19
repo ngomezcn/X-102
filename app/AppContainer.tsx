@@ -21,6 +21,9 @@ import NavigationService from "../services/NavigationService";
 import { StyleSheet, View, Text, StatusBar } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
 import { useToastUtil } from "@/components/ToastUtil";
+import AppHeader from "@/components/header/Header";
+import { VStack } from "@/components/ui/vstack";
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,20 +33,20 @@ const AppContainer = () => {
   );
 
   NavigationService.navigate(AppRoutes.Access)
+  changeNavigationBarColor('#ffffff', true);
 
   return (
     <>
-
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"/>
+        
       <GluestackUIProvider mode={colorMode}>
-
         <NavigationContainer ref={NavigationService.getRef()} independent={true}>
-          {/* Contenedor principal */}
           <View style={{ flex: 1 }}>
-
-            {/* Vista superior: Stack Navigator */}
             <View style={{ flex: 1 }}>
               <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
-
+                <AppHeader />
                 <Stack.Navigator
                   initialRouteName={AppRoutes.Access}
                   screenOptions={{
@@ -60,11 +63,7 @@ const AppContainer = () => {
                 </Stack.Navigator>
               </SafeAreaView>
             </View>
-
-            {/* Vista inferior: BottomNavigationView con altura fija */}
-            <View style={{ height: 60 }}>
-              <BottomNavigationView />
-            </View>
+            <BottomNavigationView />
           </View>
         </NavigationContainer>
       </GluestackUIProvider>

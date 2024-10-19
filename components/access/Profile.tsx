@@ -86,6 +86,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { useToastUtil } from "../ToastUtil";
+import AppHeader from "../header/Header";
 
 interface SingleDeviceProps {
   mac?: string;
@@ -103,88 +104,26 @@ type MobileHeaderProps = {
 const DashboardLayout = (props: any) => {
 
   return (
-    <VStack className="flex-1 w-full bg-background-0">
-      {/* Encabezado móvil para pantallas pequeñas */}
-      <Box className="md:hidden">
-        <MobileHeader title={props.title} />
-      </Box>
-
-      {/* Contenedor principal */}
-      <VStack className="flex-1 w-full">
-        <HStack className="flex-1 w-full">
-          <VStack className="flex-1 w-full">
-            {props.children}
-          </VStack>
-        </HStack>
-      </VStack>
-    </VStack>
+    <>
+      <VStack className="flex-1 px-5 py-4">
+        <VStack className="flex-1 w-full">
+          <HStack className="flex-1 w-full">
+            <VStack className="flex-1 w-full">
+              {props.children}
+            </VStack>
+          </HStack>
+        </VStack>
+      </VStack >
+    </>
   );
 };
-
-function MobileHeader(props: MobileHeaderProps) {
-  return (
-    <HStack
-      className="py-6 px-4 border-b border-gray-400 bg-background-0 items-center justify-between"
-      space="md"
-    >
-      <HStack className="items-center" space="sm">
-        <Pressable
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Icon as={ChevronLeftIcon} />
-        </Pressable>
-        <Text className="text-xl">{props.title}</Text>
-      </HStack>
-
-
-      <Icon as={HelpCircle} />
-    </HStack>
-  );
-}
-type userSchemaDetails = z.infer<typeof userSchema>;
-
-// Define the Zod schema
-const userSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, "First name is required")
-    .max(50, "First name must be less than 50 characters"),
-  lastName: z
-    .string()
-    .min(1, "Last name is required")
-    .max(50, "Last name must be less than 50 characters"),
-  gender: z.enum(["male", "female", "other"]),
-  phoneNumber: z
-    .string()
-    .regex(
-      /^\+?[1-9]\d{1,14}$/,
-      "Phone number must be a valid international phone number"
-    ),
-  city: z
-    .string()
-    .min(1, "City is required")
-    .max(100, "City must be less than 100 characters"),
-  state: z
-    .string()
-    .min(1, "State is required")
-    .max(100, "State must be less than 100 characters"),
-  country: z
-    .string()
-    .min(1, "Country is required")
-    .max(100, "Country must be less than 100 characters"),
-  zipcode: z
-    .string()
-    .min(1, "Zipcode is required")
-    .max(20, "Zipcode must be less than 20 characters"),
-});
 
 interface AccountCardType {
   iconName: LucideIcon | typeof Icon;
   subText: string;
   endIcon: LucideIcon | typeof Icon;
 }
+
 const menuData: AccountCardType[] = [
   {
     iconName: PenBox,
@@ -203,91 +142,91 @@ const menuData: AccountCardType[] = [
   }
 ];
 
-
-export const Profile : React.FC<SingleDeviceProps> = ({ deviceId }) => {
+export const Profile: React.FC<SingleDeviceProps> = ({ deviceId }) => {
 
   const reduxDevices = useSelector((state: RootState) => state.device.devices);
   const reduxDevicesList = Object.values(reduxDevices);
   const reduxSingleDevice = reduxDevicesList[0];
   const dispatch = useDispatch();
 
-  // Usa la MAC proporcionada o la del dispositivo de redux
   const selectedMac = deviceId || reduxSingleDevice?.mac;
-  const { showToast } = useToastUtil(); // Use the toast utility
+  const { showToast } = useToastUtil();
+
   return (
     <DashboardLayout title="Acceso">
-      
+
       <View className="flex-1">
-      {/* Box superior de 300px */}
+        {/* Box superior de 300px */}
 
-      <View className="">
-        <VStack space="lg" className="items-center md:mt-14 mt-6 w-full md:px-10 md:pt-6 pb-4">
-          <Text size="3xl" className="font-roboto text-dark font-bold">
-          {reduxSingleDevice.deviceName}
-          </Text>
-          <Text className="font-roboto text-sm text-typograpphy-800">
-          {reduxSingleDevice.deviceAddress}
-          </Text>
-          <Text className="font-roboto text-sm text-typograpphy-800">
-          {reduxSingleDevice.deviceNameInternal}
-          </Text>
-        </VStack>
+        <View className="">
+          <VStack space="lg" className="items-center md:mt-14 mt-6 w-full md:px-10 md:pt-6 pb-4">
+            <Text size="3xl" className="font-roboto text-dark font-bold">
+              {reduxSingleDevice.deviceName}
+            </Text>
+            <Text className="font-roboto text-sm text-typograpphy-800">
+              {reduxSingleDevice.deviceAddress}
+            </Text>
+            <Text className="font-roboto text-sm text-typograpphy-800">
+              {reduxSingleDevice.deviceNameInternal}
+            </Text>
+          </VStack>
 
-        {/* Este VStack es el que tenías en la parte inferior */}
-        <VStack space="lg" className="px-6 py-1">
-          <Divider />
-          {menuData.map((item, index) => (
-            <TouchableRipple key={index} rippleColor="rgba(0, 0, 0, .32)">
-              <HStack className="justify-between">
-                <HStack space="md">
-                  <Icon as={item.iconName} />
-                  <Text>{item.subText}</Text>
+          {/* Este VStack es el que tenías en la parte inferior */}
+          <VStack space="lg" >
+            <Divider />
+            {menuData.map((item, index) => (
+              <TouchableRipple key={index} rippleColor="rgba(0, 0, 0, .32)">
+                <HStack className="justify-between">
+                  <HStack space="md">
+                    <Icon as={item.iconName} />
+                    <Text>{item.subText}</Text>
+                  </HStack>
+                  <RPressable>
+                    {({ pressed }) => (
+                      <Icon
+                        as={item.endIcon}
+                        className={`${pressed ? "text-background-500" : "text-background-800"} md:hidden`}
+                      />
+                    )}
+                  </RPressable>
                 </HStack>
-                <RPressable>
-                  {({ pressed }) => (
-                    <Icon
-                      as={item.endIcon}
-                      className={`${pressed ? "text-background-500" : "text-background-800"} md:hidden`}
-                    />
-                  )}
-                </RPressable>
-              </HStack>
-            </TouchableRipple>
-          ))}
-          <Divider />
-        </VStack>
-      </View>
-
-      <TouchableRipple
-        onPress={() => showToast("xd", "error")}
-        borderless={true}
-        //underlayColor={"#1E90FF"}
-        className="flex-1 justify-center items-center">
-        <View
-          className="bg-gray-300 rounded-full"
-          style={{
-            backgroundColor: '#1E90FF', // Color de fondo azul
-            borderRadius: 9999, // Asegura que sea completamente circular
-            width: '60%',
-            height: '60%',
-            aspectRatio: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            // Sombra para iOS
-            shadowColor: '#000', // Color de la sombra
-            shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
-            shadowOpacity: 0.3, // Opacidad de la sombra
-            shadowRadius: 4, // Difuminado de la sombra
-            // Elevación para Android
-            elevation: 5, // Eleva la vista
-          }}
-        >
-          <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
+              </TouchableRipple>
+            ))}
+            <Divider />
+          </VStack>
         </View>
-      </TouchableRipple>
 
-    </View>
+        <View
+          className="flex-1 justify-center items-center">
+          <TouchableRipple
+            underlayColor={"#ffffff"}
+            rippleColor={"#ffffff"}
 
+            onPress={() => console.log("")}
+            borderless={true}
+            className="bg-gray-300 rounded-full"
+            style={{
+              backgroundColor: '#1E90FF',
+              borderRadius: 9999,
+              width: '60%',
+              height: '60%',
+              aspectRatio: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              // Sombra para iOS
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+
+              // Elevación para Android
+              elevation: 5,
+            }}>
+            <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
+          </TouchableRipple>
+        </View>
+      </View>
     </DashboardLayout>
   );
 };
