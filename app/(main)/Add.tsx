@@ -1,22 +1,12 @@
-import React from "react";
-import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
-import { ButtonGroup } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
 import { Divider } from "@/components/ui/divider";
 import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { Pressable } from "@/components/ui/pressable";
-import { Badge } from "@/components/ui/badge";
-import { BadgeText } from "@/components/ui/badge";
+import React from "react";
 import { ScrollView } from "react-native";
-import { Blinds, BookKey, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileKey, FileWarning, GlobeIcon, Key, LucideQrCode, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, Settings, Tablets, TriangleAlert } from "lucide-react-native";
-import { AppRoutes } from '@/constants/AppRoutes'
-import { Icon } from "@/components/ui/icon";
-import { Pressable as RPressable } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
-import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
 import { ConnStringManager } from "../../components/add/connString/ConnStringManager";
+import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
 
 const AddScreen = () => {
 

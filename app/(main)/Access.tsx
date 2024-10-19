@@ -11,13 +11,17 @@ import { Divider } from "@/components/ui/divider";
 import { NoDevicesMessage } from "@/components/access/NoDevicesMessage";
 import { VStack } from "@/components/ui/vstack";
 import { useToastUtil } from "@/components/ToastUtil";
+import { useHeading } from "@/context/HeadingContext";
 
 const Access = () => {
   const devices = useSelector((state: RootState) => state.device.devices);
   const deviceList = Object.values(devices);
+  const { setHeadingAppName, toggleIconVisibility, hideHeader } = useHeading();
 
   const [showSingleDevice, setShowSingleDevice] = useState(false);
   const [singleDeviceParam, setSingleDeviceParam] = useState<string>("");
+
+  setHeadingAppName("Smart Gate")
 
   const handleShowSingleDevice = (param: string) => {
     setSingleDeviceParam(param);

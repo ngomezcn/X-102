@@ -1,27 +1,25 @@
-import { Button, ButtonText, ButtonSpinner, ButtonIcon } from '@/components/ui/button';
+import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 
-import { FormControlErrorText, FormControlErrorIcon, FormControl, FormControlHelper, FormControlHelperText, FormControlError, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
-import React from "react";
+import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
+import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
-import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
+import React from "react";
 //import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
-import { ScrollView } from "react-native";
-import { AlertCircleIcon, AlertTriangle, ArrowLeftIcon, ArrowRight, Blinds, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileWarning, GlobeIcon, Key, LucideQrCode, MapPin, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, SearchCheck, Settings, Tablets, TriangleAlert } from "lucide-react-native";
-import { Pressable as RPressable, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { StepsLayout } from '../../components/add/StepsLayout';
-import { RootState } from "@/store/store"
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from 'react-redux';
-import { setDeviceName, setDeviceAddress, } from '@/store/slices/deviceSlice';
 import { AppRoutes } from '@/constants/AppRoutes';
 import NavigationService from '@/services/NavigationService';
+import { setDeviceAddress, setDeviceName, } from '@/store/slices/deviceSlice';
+import { RootState } from "@/store/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertTriangle, ArrowLeftIcon, ArrowRight, MapPin, SearchCheck } from "lucide-react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Pressable as RPressable } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { z } from "zod";
+import { StepsLayout } from '../../components/add/StepsLayout';
 
 const inputSchema = z.object({
     deviceName: z.string().min(1, "Información obligatoria"),

@@ -9,17 +9,20 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from '../store/store';
 import AppContainer from './AppContainer';
 import { Text } from '@/components/ui/text';
+import { HeadingProvider } from '@/context/HeadingContext';
 
-LogBox.ignoreAllLogs(false); 
+LogBox.ignoreAllLogs(false);
 
 const RootLayout: React.FC = () => {
- 
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <AppContainer />
-      </PersistGate>
-    </Provider>
+    <HeadingProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppContainer />
+        </PersistGate>
+      </Provider>
+    </HeadingProvider>
   );
 };
 
