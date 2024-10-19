@@ -4,7 +4,7 @@ import { RootState } from '@/store/store';
 
 import log from '@/utils/logger';
 import NavigationService from '@/services/NavigationService';
-import { Profile } from "@/components/access/Profile";
+import { AccessDevice } from "@/components/access/AccessDevice";
 import { DeviceList } from "@/components/access/DeviceList";
 import { Heading } from "@/components/ui/heading";
 import { Divider } from "@/components/ui/divider";
@@ -47,11 +47,11 @@ const Access = () => {
   return (
     <>
         {showSingleDevice ? (
-          <Profile deviceId={singleDeviceParam} />
+          <AccessDevice deviceId={singleDeviceParam} />
         ) : deviceList.length > 1 ? (
            <DeviceList onDeviceSelect={handleShowSingleDevice} />
         ) : deviceList.length === 1 ? (
-          <Profile deviceId={singleDeviceParam} />
+          <AccessDevice deviceId={singleDeviceParam} />
         ) : (
           <NoDevicesMessage />
         )}

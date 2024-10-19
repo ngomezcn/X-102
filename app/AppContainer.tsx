@@ -13,6 +13,7 @@ import NavigationService from "../services/NavigationService";
 import Access from "./(main)/Access";
 import AddScreen from "./(main)/Add";
 import SetDeviceInfoScreen from "./(main)/SetDeviceInfoScreen";
+import Test from "./(main)/Test";
 let defaultTheme: "dark" | "light" = "light";
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,7 @@ const AppContainer = () => {
                 >
                   <Stack.Screen name={AppRoutes.Access} component={Access} />
                   <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
+                  <Stack.Screen name={AppRoutes.Test} component={Test} />
                   <Stack.Screen
                     name={AppRoutes.SetDeviceInfoScreen}
                     component={SetDeviceInfoScreen}

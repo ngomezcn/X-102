@@ -13,6 +13,9 @@ import { Pressable as RPressable, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useDispatch, useSelector } from "react-redux";
 import { useToastUtil } from "../ToastUtil";
+import { MotiView } from 'moti';
+import { Easing } from 'react-native-reanimated';
+import { StyleSheet } from 'react-native';
 
 interface SingleDeviceProps {
   mac?: string;
@@ -21,23 +24,6 @@ interface SingleDeviceProps {
 interface SingleDeviceProps {
   deviceId: string;
 }
-
-const DashboardLayout = (props: any) => {
-
-  return (
-    <>
-      <VStack className="flex-1 px-5 py-4">
-        <VStack className="flex-1 w-full">
-          <HStack className="flex-1 w-full">
-            <VStack className="flex-1 w-full">
-              {props.children}
-            </VStack>
-          </HStack>
-        </VStack>
-      </VStack >
-    </>
-  );
-};
 
 interface AccountCardType {
   iconName: LucideIcon | typeof Icon;
@@ -63,7 +49,24 @@ const menuData: AccountCardType[] = [
   }
 ];
 
-export const Profile: React.FC<SingleDeviceProps> = ({ deviceId }) => {
+const DashboardLayout = (props: any) => {
+
+  return (
+    <>
+      <VStack className="flex-1 px-5 py-4">
+        <VStack className="flex-1 w-full">
+          <HStack className="flex-1 w-full">
+            <VStack className="flex-1 w-full">
+              {props.children}
+            </VStack>
+          </HStack>
+        </VStack>
+      </VStack >
+    </>
+  );
+};
+
+export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
 
   const reduxDevices = useSelector((state: RootState) => state.device.devices);
   const reduxDevicesList = Object.values(reduxDevices);
@@ -117,36 +120,63 @@ export const Profile: React.FC<SingleDeviceProps> = ({ deviceId }) => {
           </VStack>
         </View>
 
-        <View
-          className="flex-1 justify-center items-center">
-          <TouchableRipple
-            underlayColor={"#ffffff"}
-            rippleColor={"#ffffff"}
 
-            onPress={() => console.log("")}
-            borderless={true}
-            className="bg-gray-300 rounded-full"
-            style={{
-              backgroundColor: '#1E90FF',
-              borderRadius: 9999,
-              width: '60%',
-              height: '60%',
-              aspectRatio: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
+        {/* BOOOOOOTOOON */}
 
-              // Sombra para iOS
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.3,
-              shadowRadius: 4,
+        <View className="flex-1 justify-center items-center">
+  <View style={{ position: 'relative', width: '60%', height: '60%', justifyContent: 'center', alignItems: 'center' }}>
+    {[...Array(3).keys()].map((index) => (
+      <MotiView
+        key={index}
+        from={{ opacity: 0.7, scale: 1 }}
+        animate={{ opacity: 0, scale: 4 }}
+        transition={{
+          type: 'timing',
+          duration: 2000,
+          easing: Easing.out(Easing.ease),
+          delay: index * 400,
+          loop: true,
+        }}
+        style={{
+          width: 80,
+          height: 80,
+          borderRadius: 40,
+          backgroundColor: 'rgba(0, 0, 255, 0.5)',
+          position: 'absolute',
+          top: '50%', // Centramos verticalmente
+          left: '50%', // Centramos horizontalmente
+          marginTop: -40, // La mitad de la altura
+          marginLeft: -40, // La mitad de la anchura
+        }}
+      />
+    ))}
 
-              // Elevación para Android
-              elevation: 5,
-            }}>
-            <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
-          </TouchableRipple>
-        </View>
+    <TouchableRipple
+      onPress={() => console.log('Button Pressed')} // Maneja el evento de presionar
+      style={{
+        backgroundColor: '#1E90FF',
+        borderRadius: 9999,
+        width: '100%',
+        height: '100%',
+        aspectRatio: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        // Sombra para iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+
+        // Elevación para Android
+        elevation: 5,
+      }}
+      rippleColor="rgba(255, 255, 255, 0.3)" // Color de la onda
+    >
+      <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
+    </TouchableRipple>
+  </View>
+</View>
       </View>
     </DashboardLayout>
   );

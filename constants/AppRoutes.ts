@@ -8,6 +8,7 @@ import {
 
 export const AppRoutes = {
     ToDo: "todo",
+    Test: "test",
     Access: "access",
     AccessRoutes: {
         DevicesList: "access-devices-list",
@@ -57,8 +58,8 @@ export const bottomTabs: IBottomTab[] = [
         icon: CircleHelp,
     },
     {
-        id: AppRoutes.Settings,
-        label: "Ajustes",
+        id: AppRoutes.Test,
+        label: "TAjustes",
         disabled: false,
         icon: Settings,
     },
