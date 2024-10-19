@@ -10,7 +10,7 @@ const AppHeader: React.FC = () => {
     const { heading, toggleIconVisibility, hiddenIcon, isHeaderVisible } = useHeading();
 
     if (!isHeaderVisible) {
-        return null; // Si el encabezado está oculto, no se renderiza nada
+        return null; 
     }
 
     return (

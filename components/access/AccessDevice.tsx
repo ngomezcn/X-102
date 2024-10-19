@@ -8,7 +8,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { RootState } from "@/store/store";
 import { Boxes, PenBox, Power, ScrollText, type LucideIcon } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Pressable as RPressable, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useDispatch, useSelector } from "react-redux";
@@ -16,10 +16,8 @@ import { useToastUtil } from "../ToastUtil";
 import { MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
-
-interface SingleDeviceProps {
-  mac?: string;
-}
+import { AccessButton } from "./AccessButton";
+import { Device } from "react-native-ble-plx";
 
 interface SingleDeviceProps {
   deviceId: string;
@@ -39,7 +37,7 @@ const menuData: AccountCardType[] = [
   },
   {
     iconName: Boxes,
-    subText: "Features",
+    subText: "Funcionalidades",
     endIcon: ChevronRightIcon,
   },
   {
@@ -72,15 +70,24 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
   const reduxDevicesList = Object.values(reduxDevices);
   const reduxSingleDevice = reduxDevicesList[0];
   const dispatch = useDispatch();
-
   const selectedMac = deviceId || reduxSingleDevice?.mac;
   const { showToast } = useToastUtil();
+
+  const [buttonState, setButtonState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle'); // Estado del botón
+
+  const handleButtonClick = () => {
+    setButtonState('loading'); // Establece el estado inicial
+
+    // Usa setTimeout para cambiar el estado a 'success' después de 5 segundos
+    setTimeout(() => {
+      setButtonState('success');
+    }, 7000);
+  };
 
   return (
     <DashboardLayout title="Acceso">
 
       <View className="flex-1">
-        {/* Box superior de 300px */}
 
         <View className="">
           <VStack space="lg" className="items-center md:mt-14 mt-6 w-full md:px-10 md:pt-6 pb-4">
@@ -120,63 +127,11 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
           </VStack>
         </View>
 
+        <AccessButton
+          onClickButton={handleButtonClick}
+          buttonState={buttonState}
+        />
 
-        {/* BOOOOOOTOOON */}
-
-        <View className="flex-1 justify-center items-center">
-  <View style={{ position: 'relative', width: '60%', height: '60%', justifyContent: 'center', alignItems: 'center' }}>
-    {[...Array(3).keys()].map((index) => (
-      <MotiView
-        key={index}
-        from={{ opacity: 0.7, scale: 1 }}
-        animate={{ opacity: 0, scale: 4 }}
-        transition={{
-          type: 'timing',
-          duration: 2000,
-          easing: Easing.out(Easing.ease),
-          delay: index * 400,
-          loop: true,
-        }}
-        style={{
-          width: 80,
-          height: 80,
-          borderRadius: 40,
-          backgroundColor: 'rgba(0, 0, 255, 0.5)',
-          position: 'absolute',
-          top: '50%', // Centramos verticalmente
-          left: '50%', // Centramos horizontalmente
-          marginTop: -40, // La mitad de la altura
-          marginLeft: -40, // La mitad de la anchura
-        }}
-      />
-    ))}
-
-    <TouchableRipple
-      onPress={() => console.log('Button Pressed')} // Maneja el evento de presionar
-      style={{
-        backgroundColor: '#1E90FF',
-        borderRadius: 9999,
-        width: '100%',
-        height: '100%',
-        aspectRatio: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        // Sombra para iOS
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-
-        // Elevación para Android
-        elevation: 5,
-      }}
-      rippleColor="rgba(255, 255, 255, 0.3)" // Color de la onda
-    >
-      <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
-    </TouchableRipple>
-  </View>
-</View>
       </View>
     </DashboardLayout>
   );
