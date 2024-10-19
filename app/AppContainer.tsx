@@ -18,8 +18,9 @@ import Access from "./(main)/Access";
 import AddScreen from "./(main)/Add";
 import SetDeviceInfoScreen from "./(main)/SetDeviceInfoScreen";
 import NavigationService from "../services/NavigationService";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, StatusBar } from 'react-native';
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
+import { useToastUtil } from "@/components/ToastUtil";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,35 +33,39 @@ const AppContainer = () => {
 
   return (
     <>
+
       <GluestackUIProvider mode={colorMode}>
 
-        <StatusBar style="dark" backgroundColor="#fff" />
-
         <NavigationContainer ref={NavigationService.getRef()} independent={true}>
+          {/* Contenedor principal */}
+          <View style={{ flex: 1 }}>
 
-          <SafeAreaView style={{ flex: 1, paddingTop: 15 }}>
+            {/* Vista superior: Stack Navigator */}
+            <View style={{ flex: 1 }}>
+              <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
 
-            <Stack.Navigator
-              initialRouteName={AppRoutes.Access}
+                <Stack.Navigator
+                  initialRouteName={AppRoutes.Access}
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: 'white' },
+                  }}
+                >
+                  <Stack.Screen name={AppRoutes.Access} component={Access} />
+                  <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
+                  <Stack.Screen
+                    name={AppRoutes.SetDeviceInfoScreen}
+                    component={SetDeviceInfoScreen}
+                  />
+                </Stack.Navigator>
+              </SafeAreaView>
+            </View>
 
-              screenOptions={{
-                headerShown: false,
-                header: () => null,
-                contentStyle: { backgroundColor: 'white' },
-              }}>
-
-              <Stack.Screen name={AppRoutes.Access} component={Access} />
-
-              <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
-              <Stack.Screen name={AppRoutes.SetDeviceInfoScreen} component={SetDeviceInfoScreen} />
-
-            </Stack.Navigator>
-
-            <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
+            {/* Vista inferior: BottomNavigationView con altura fija */}
+            <View style={{ height: 60 }}>
               <BottomNavigationView />
-            </Box>
-
-          </SafeAreaView>
+            </View>
+          </View>
         </NavigationContainer>
       </GluestackUIProvider>
     </>

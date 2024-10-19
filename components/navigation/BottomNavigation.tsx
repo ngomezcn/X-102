@@ -27,6 +27,7 @@ const BottomNavigationView = () => {
   }
 
   return (
+    
     <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-6 md:hidden">
       {bottomTabs.map((tab) => (
         <Pressable

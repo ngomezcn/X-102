@@ -1,22 +1,37 @@
 import { AppRoutes } from '@/constants/AppRoutes';
 import log from '@/utils/logger';
-import { createNavigationContainerRef } from '@react-navigation/native';
+import { createNavigationContainerRef, NavigationContainerRef } from '@react-navigation/native';
+
+type NavigationListener = (prevRoute: string, currentRoute: string) => void;
 
 class NavigationService {
-  private static navigationRef = createNavigationContainerRef();
+  private static navigationRef: NavigationContainerRef<any> = createNavigationContainerRef();
+  public static listeners: Array<NavigationListener> = [];
+  private static currentRoute: string | null = null;
 
   static getRef() {
     return this.navigationRef;
   }
 
-  static isReady() {
+  static isReady(): boolean {
     return this.navigationRef.isReady();
   }
 
-  static navigate(routeName: string, params?: object) {
+  static subscribe(listener: NavigationListener): void {
+    this.listeners.push(listener);
+  }
+
+  private static notifyListeners(prevRoute: string, currentRoute: string): void {
+    this.listeners.forEach(listener => listener(prevRoute, currentRoute));
+  }
+
+  static navigate(routeName: string, params?: object): void {
     if (this.isReady()) {
+      const prevRoute = this.getCurrentRoute();
       log.debug(`Navegando a: ${routeName}`);
       this.navigationRef.navigate(routeName, params);
+      this.currentRoute = routeName; // Actualizamos la ruta actual
+      this.notifyListeners(prevRoute, routeName); // Notificamos a los escuchadores
     } else {
       log.warn('Referencia de navegación no está lista');
     }
@@ -32,10 +47,13 @@ class NavigationService {
     return AppRoutes.Access;
   }
 
-  static goBack() {
+  static goBack(): void {
     if (this.isReady()) {
+      const prevRoute = this.getCurrentRoute();
       log.debug('Regresando a la ruta anterior');
       this.navigationRef.goBack();
+      const newRoute = this.getCurrentRoute(); // Obtenemos la nueva ruta después de hacer goBack
+      this.notifyListeners(prevRoute, newRoute);
     } else {
       log.warn('Referencia de navegación no está lista');
     }
