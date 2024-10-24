@@ -11,7 +11,7 @@ import { Divider } from "@/components/ui/divider";
 import { NoDevicesMessage } from "@/components/access/NoDevicesMessage";
 import { VStack } from "@/components/ui/vstack";
 import { useToastUtil } from "@/components/ToastUtil";
-import { useHeading } from "@/context/HeadingContext";
+import { useHeading } from "@/hooks/useHeading";
 
 const Access = () => {
   const devices = useSelector((state: RootState) => state.device.devices);

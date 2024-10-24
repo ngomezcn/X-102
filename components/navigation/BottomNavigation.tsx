@@ -30,7 +30,7 @@ const BottomNavigationView = () => {
   return (
 
     <View className="border-t border-gray-100 h-16 flex justify-center items-center bg-white">
-      <HStack className="content-center justify-between px-6" style={{ width: '100%' }}>
+      <HStack className="content-center justify-between mx-auto" style={{ width: '90%', maxWidth: 270 }}>
         {bottomTabs.map((tab) => (
           <Pressable
             key={tab.id}

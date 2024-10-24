@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHeading } from '@/context/HeadingContext';
+import { useHeading } from '@/hooks/useHeading';
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Icon } from "../ui/icon";

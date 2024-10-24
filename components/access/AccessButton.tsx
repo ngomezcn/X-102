@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "@/components/ui/icon";
-import { Check, Power } from "lucide-react-native";
+import { Check, CircleX, Power } from "lucide-react-native";
 import { MotiView } from 'moti';
 import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
@@ -8,8 +8,8 @@ import { Easing } from 'react-native-reanimated';
 import { Spinner } from "@/components/ui/spinner"; // Asegúrate de importar tu Spinner
 
 interface AccessButtonProps {
-    onClickButton: () => Promise<void>; 
-    buttonState: 'idle' | 'loading' | 'success' | 'error'; 
+    onClickButton: () => Promise<void>;
+    buttonState: 'idle' | 'loading' | 'success' | 'error';
 }
 
 export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, buttonState }) => {
@@ -76,12 +76,15 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
                     rippleColor="rgba(255, 255, 255, 0.3)"
                 >
                     {buttonState === 'loading' ? (
-                        <Spinner  className="h-[145%] w-[145%]" color={'#FFFFFF'} /> // Muestra el spinner en lugar del ícono
+                        <Spinner className="h-[145%] w-[145%]" color={'#FFFFFF'} /> // Muestra el spinner en lugar del ícono
                     ) : buttonState === 'success' ? (
                         <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Check} />
+                    ) : buttonState === 'error' ? (
+                        <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={CircleX} />
                     ) : (
                         <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
                     )}
+
                 </TouchableRipple>
             </View>
         </View>

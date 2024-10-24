@@ -9,7 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from '../store/store';
 import AppContainer from './AppContainer';
 import { Text } from '@/components/ui/text';
-import { HeadingProvider } from '@/context/HeadingContext';
+import { HeadingProvider } from '@/hooks/useHeading';
 
 LogBox.ignoreAllLogs(false);
 

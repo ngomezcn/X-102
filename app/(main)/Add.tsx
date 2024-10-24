@@ -7,16 +7,19 @@ import React from "react";
 import { ScrollView } from "react-native";
 import { ConnStringManager } from "../../components/add/connString/ConnStringManager";
 import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
+import { useHeading } from "@/hooks/useHeading";
 
 const AddScreen = () => {
+  const { setHeadingAppName, toggleIconVisibility, hideHeader } = useHeading();
+  setHeadingAppName("Añadir Gate")
 
   return <>
     <ScrollView >
       <VStack className="px-5 py-4 flex-1" space="lg">
 
-        <Heading className="md">Añadir Gate</Heading>
+        {/*<Heading className="md">Añadir Gate</Heading>
 
-        <Divider />
+        <Divider /> */}
 
         <VStack space="lg">
           <ScanQrItem />

@@ -1,0 +1,6 @@
+usbipd detach --wsl --busid 2-2
+usbipd detach  --busid 2-2
+usbipd bind --busid 2-2
+ usbipd list
+usbipd detach --wsl --busid 2-2
+adb kill-server --force

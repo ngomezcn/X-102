@@ -25,9 +25,9 @@
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
-        "android.permission.BLUETOOTH_SCAN", 
+        "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
-        "android.permission.ACCESS_FINE_LOCATION" 
+        "android.permission.ACCESS_FINE_LOCATION"
       ],
       "package": "com.ngomez.smartgateapp"
     },
@@ -43,6 +43,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5ba32d28-b300-4488-bbd4-8ae3aecf4b6d"
+      }
     }
   }
 }

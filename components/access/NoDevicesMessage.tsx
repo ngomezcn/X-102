@@ -20,7 +20,7 @@ export const NoDevicesMessage: React.FC<{ settActiveTab?: (tab: string) => void;
   const deviceList = Object.values(devices);
 
   return (
-    <Box>
+    <VStack className="px-5 py-4 flex-1">
       <VStack space="lg">
         <HStack className="justify-between">
           <HStack space="md">
@@ -60,7 +60,7 @@ export const NoDevicesMessage: React.FC<{ settActiveTab?: (tab: string) => void;
       ) : (
         <Text>No hay dispositivos configurados.</Text> // Mensaje si no hay dispositivos
       )}
-    </Box>
+    </VStack>
   );
 };
 

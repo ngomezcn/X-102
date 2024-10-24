@@ -18,6 +18,9 @@ import { Easing } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
 import { AccessButton } from "./AccessButton";
 import { Device } from "react-native-ble-plx";
+import { useBLEService } from '@/hooks/useBLEService'; // Asegúrate de ajustar la ruta
+import { Base64 } from 'js-base64';
+import log from "@/utils/logger";
 
 interface SingleDeviceProps {
   deviceId: string;
@@ -75,13 +78,45 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
 
   const [buttonState, setButtonState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle'); // Estado del botón
 
-  const handleButtonClick = () => {
+  const BLEService = useBLEService(); // Usamos el servicio BLE
+
+
+  const serviceUUID = '4c491e6a-38df-4d0f-b04b-8704a40071ce'; // Reemplaza con tu UUID de servicio
+  const characteristicUUID = 'b0726341-e52e-471b-9cd6-4061e54616cc'; // Reemplaza con tu UUID de característica
+
+
+  const handleButtonClick = async () => {
     setButtonState('loading'); // Establece el estado inicial
 
-    // Usa setTimeout para cambiar el estado a 'success' después de 5 segundos
-    setTimeout(() => {
-      setButtonState('success');
-    }, 7000);
+    console.log(selectedMac)
+
+    try {
+      const granted = await BLEService.requestBluetoothPermissions();
+
+      if (granted) {
+        BLEService.setMac(selectedMac);
+
+        await BLEService.scanForDevice();
+        await BLEService.connectToDevice();
+
+        const command = Base64.encode('AK='+reduxSingleDevice.password);
+        await BLEService.sendCommand(serviceUUID, characteristicUUID, command);
+       
+        const data = await BLEService.receiveDataFromDevice(serviceUUID, characteristicUUID);
+
+        await BLEService.disconnect();
+
+        setButtonState('success');
+
+      } else {
+        return;
+      }
+
+
+    } catch (error: any) {
+      log.error("error " + error);
+      setButtonState('error');
+    }
   };
 
   return (

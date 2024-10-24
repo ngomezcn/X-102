@@ -39,24 +39,24 @@ export const bottomTabs: IBottomTab[] = [
         disabled: false,
         icon: Plus,
     },
-    {
+    /*{
         id: AppRoutes.Record,
         label: "Registro",
         disabled: false,
         icon: ScrollText,
-    },
+    },*/
     {
         id: AppRoutes.Access,
         label: "Acceso",
         disabled: false,
         icon: Home,
     },
-    {
+   /* {
         id: AppRoutes.Help,
         label: "Ayuda",
         disabled: false,
         icon: CircleHelp,
-    },
+    },*/
     {
         id: AppRoutes.Test,
         label: "TAjustes",
