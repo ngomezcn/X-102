@@ -11,8 +11,8 @@ interface Device {
 
 interface DeviceState {
     devices: Record<string, Device>; // Almacenar dispositivos usando MAC como clave
-    currentDevice: Partial<Device>; // Permitir campos opcionales
-    error: string | null; // Manejo de errores
+    currentDevice: Partial<Device>;  // Permitir campos opcionales
+    error: string | null;            // Manejo de errores
 }
 
 const initialState: DeviceState = {

@@ -2,13 +2,16 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define la forma del contexto
 interface HeadingContextType {
-    heading: string;
+
     setHeadingAppName: (name: string) => void;
-    toggleIconVisibility: () => void;
-    hiddenIcon: boolean;
+    setIconVisibility: (visible: boolean) => void;
+    setHeaderVisibility: (visible: boolean) => void;
+    setLeftArrowVisibility: (visible: boolean) => void;
+
+    heading: string;
+    isIconVisible: boolean;
     isHeaderVisible: boolean;
-    hideHeader: () => void;
-    showHeader: () => void;
+    isLeftArrowVisible: boolean;
 }
 
 // Crea el contexto
@@ -25,29 +28,41 @@ export const useHeading = (): HeadingContextType => {
 
 // Proveedor del contexto
 export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [heading, setHeading] = useState<string>("Acceso");
-    const [hiddenIcon, setHiddenIcon] = useState<boolean>(false);
-    const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true); // Estado para controlar la visibilidad del encabezado
+    const [heading, setHeading] = useState<string>("Smart Gate");
+    const [isIconVisible, setIconVisible] = useState<boolean>(true);
+    const [isHeaderVisible, setHeaderVisible] = useState<boolean>(true);
+    const [isLeftArrowVisible, setLeftArrowVisible] = useState<boolean>(true);
+
+
 
     const setHeadingAppName = (name: string) => {
         setHeading(name);
     };
 
-    const toggleIconVisibility = () => {
-        setHiddenIcon((prev) => !prev);
+    const setIconVisibility = (visible: boolean) => {
+        setIconVisible(visible);
     };
 
-    const hideHeader = () => {
-        setIsHeaderVisible(false);
+    const setHeaderVisibility = (visible: boolean) => {
+        setHeaderVisible(visible);
     };
 
-    const showHeader = () => {
-        setIsHeaderVisible(true);
+    const setLeftArrowVisibility = (visible: boolean) => {
+        setLeftArrowVisible(visible);
     };
 
     return (
         <HeadingContext.Provider
-            value={{ heading, setHeadingAppName, toggleIconVisibility, hiddenIcon, isHeaderVisible, hideHeader, showHeader }}
+            value={{
+                setHeadingAppName,
+                setIconVisibility,
+                setHeaderVisibility,
+                setLeftArrowVisibility,
+                heading,
+                isIconVisible,
+                isHeaderVisible,
+                isLeftArrowVisible,
+            }}
         >
             {children}
         </HeadingContext.Provider>

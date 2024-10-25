@@ -2,7 +2,8 @@ import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import {
   ChevronRightIcon,
-  Icon
+  Icon,
+  UIIcon
 } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -16,7 +17,7 @@ import { useToastUtil } from "../ToastUtil";
 import { MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
-import { AccessButton } from "./AccessButton";
+import { AccessButton, ButtonStates } from "./AccessButton";
 import { Device } from "react-native-ble-plx";
 import { useBLEService } from '@/hooks/useBLEService'; // Asegúrate de ajustar la ruta
 import { Base64 } from 'js-base64';
@@ -26,13 +27,13 @@ interface SingleDeviceProps {
   deviceId: string;
 }
 
-interface AccountCardType {
-  iconName: LucideIcon | typeof Icon;
+interface ListEntriesType {
+  iconName: LucideIcon | typeof UIIcon;
   subText: string;
-  endIcon: LucideIcon | typeof Icon;
+  endIcon: LucideIcon | typeof UIIcon;
 }
 
-const menuData: AccountCardType[] = [
+const listEntries: ListEntriesType[] = [
   {
     iconName: PenBox,
     subText: "Modificar",
@@ -76,17 +77,18 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
   const selectedMac = deviceId || reduxSingleDevice?.mac;
   const { showToast } = useToastUtil();
 
-  const [buttonState, setButtonState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle'); // Estado del botón
+  const [buttonState, setButtonState] = useState<string>(ButtonStates.idle); // Estado del botón
 
   const BLEService = useBLEService(); // Usamos el servicio BLE
-
 
   const serviceUUID = '4c491e6a-38df-4d0f-b04b-8704a40071ce'; // Reemplaza con tu UUID de servicio
   const characteristicUUID = 'b0726341-e52e-471b-9cd6-4061e54616cc'; // Reemplaza con tu UUID de característica
 
 
   const handleButtonClick = async () => {
-    setButtonState('loading'); // Establece el estado inicial
+    if (buttonState === ButtonStates.loading) return;
+
+    setButtonState(ButtonStates.loading);
 
     console.log(selectedMac)
 
@@ -99,19 +101,22 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
         await BLEService.scanForDevice();
         await BLEService.connectToDevice();
 
-        const command = Base64.encode('AK='+reduxSingleDevice.password);
+        const command = Base64.encode('AK=' + reduxSingleDevice.password);
         await BLEService.sendCommand(serviceUUID, characteristicUUID, command);
-       
+
         const data = await BLEService.receiveDataFromDevice(serviceUUID, characteristicUUID);
 
         await BLEService.disconnect();
 
-        setButtonState('success');
+        if (data.includes("OK")) {
+          setButtonState(ButtonStates.success);
+        } else {
+          setButtonState(ButtonStates.error);
+        }
 
       } else {
-        return;
+        setButtonState(ButtonStates.idle); 
       }
-
 
     } catch (error: any) {
       log.error("error " + error);
@@ -140,7 +145,7 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
           {/* Este VStack es el que tenías en la parte inferior */}
           <VStack space="lg" >
             <Divider />
-            {menuData.map((item, index) => (
+            {listEntries.map((item, index) => (
               <TouchableRipple key={index} rippleColor="rgba(0, 0, 0, .32)">
                 <HStack className="justify-between">
                   <HStack space="md">

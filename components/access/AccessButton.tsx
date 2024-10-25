@@ -7,19 +7,26 @@ import { TouchableRipple } from 'react-native-paper';
 import { Easing } from 'react-native-reanimated';
 import { Spinner } from "@/components/ui/spinner"; // Asegúrate de importar tu Spinner
 
+export const ButtonStates = {
+    idle: "idle",
+    loading: "loading",
+    success: "success",
+    error: "error",
+} as const;
+
 interface AccessButtonProps {
     onClickButton: () => Promise<void>;
-    buttonState: 'idle' | 'loading' | 'success' | 'error';
+    buttonState: string;
 }
 
 export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, buttonState }) => {
     const getButtonStyles = () => {
         switch (buttonState) {
-            case 'loading':
+            case ButtonStates.loading:
                 return { backgroundColor: '#1E90FF' }; // Color azul durante loading
-            case 'success':
+            case ButtonStates.success:
                 return { backgroundColor: '#00A36C' };
-            case 'error':
+            case ButtonStates.error:
                 return { backgroundColor: 'red' };
             default:
                 return { backgroundColor: 'grey' }; // Color gris para idle
@@ -75,11 +82,11 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
                     }}
                     rippleColor="rgba(255, 255, 255, 0.3)"
                 >
-                    {buttonState === 'loading' ? (
+                    {buttonState === ButtonStates.loading ? (
                         <Spinner className="h-[145%] w-[145%]" color={'#FFFFFF'} /> // Muestra el spinner en lugar del ícono
-                    ) : buttonState === 'success' ? (
+                    ) : buttonState === ButtonStates.success ? (
                         <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Check} />
-                    ) : buttonState === 'error' ? (
+                    ) : buttonState === ButtonStates.error ? (
                         <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={CircleX} />
                     ) : (
                         <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />

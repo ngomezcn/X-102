@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHeading } from '@/hooks/useHeading';
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -7,8 +7,9 @@ import { ChevronLeftIcon, HelpCircle } from "lucide-react-native";
 import { Heading } from "@/components/ui/heading";
 
 const AppHeader: React.FC = () => {
-    const { heading, toggleIconVisibility, hiddenIcon, isHeaderVisible } = useHeading();
+    const { heading, isIconVisible, isHeaderVisible, isLeftArrowVisible } = useHeading();
 
+   
     if (!isHeaderVisible) {
         return null; 
     }
@@ -16,13 +17,15 @@ const AppHeader: React.FC = () => {
     return (
         <HStack style={{ height: 60 }} className="bg-white items-center justify-between border-b border-gray-100 px-5">
             <HStack className="items-center">
-                <Pressable>
-                    <Icon as={ChevronLeftIcon} />
-                </Pressable>
+                {isLeftArrowVisible && (
+                    <Pressable onPress={() => {/* Aquí puedes manejar la acción de la flecha izquierda */}}>
+                        <Icon as={ChevronLeftIcon} />
+                    </Pressable>
+                )}
                 <Heading className="md">{heading}</Heading>
             </HStack>
-            {!hiddenIcon && (
-                <Pressable onPress={toggleIconVisibility}>
+            {isIconVisible && (
+                <Pressable >
                     <Icon as={HelpCircle} className="ml-auto" />
                 </Pressable>
             )}

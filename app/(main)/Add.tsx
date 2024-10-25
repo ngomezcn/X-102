@@ -10,8 +10,9 @@ import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
 import { useHeading } from "@/hooks/useHeading";
 
 const AddScreen = () => {
-  const { setHeadingAppName, toggleIconVisibility, hideHeader } = useHeading();
-  setHeadingAppName("Añadir Gate")
+
+  const {setHeadingAppName,setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+  setHeadingAppName("Añadir")
 
   return <>
     <ScrollView >

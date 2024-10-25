@@ -16,12 +16,13 @@ import { useHeading } from "@/hooks/useHeading";
 const Access = () => {
   const devices = useSelector((state: RootState) => state.device.devices);
   const deviceList = Object.values(devices);
-  const { setHeadingAppName, toggleIconVisibility, hideHeader } = useHeading();
+  
+  const {setHeadingAppName,setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+  setLeftArrowVisibility(false)
 
   const [showSingleDevice, setShowSingleDevice] = useState(false);
   const [singleDeviceParam, setSingleDeviceParam] = useState<string>("");
 
-  setHeadingAppName("Smart Gate")
 
   const handleShowSingleDevice = (param: string) => {
     setSingleDeviceParam(param);
