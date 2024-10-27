@@ -2,32 +2,30 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import deviceReducer from './slices/deviceSlice';
+import deviceReducer from '@/store/slices/deviceSlice';
+import deviceWizardReducer from '@/store/slices/deviceWizardSlice';
 
 const persistConfig = {
   key: 'dwatfa',
   storage: AsyncStorage,
 };
 
-// Configuramos el reducer persistente
-const persistedReducer = persistReducer(persistConfig, deviceReducer);
+const persistedDeviceReducer = persistReducer(persistConfig, deviceReducer);
 
-// Configuramos el store
 const store = configureStore({
   reducer: {
-    device: persistedReducer,
+    device: persistedDeviceReducer,      
+    wizard: deviceWizardReducer,   
   },
-  middleware: (getDefaultMiddleware) => // TODO: REVISAR LO DEL MIDDLEWARE ANTES DE PRODUCCION
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, 
+      serializableCheck: false,
     }),
 });
 
-// Tipos de estado y dispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// Crear el persistor
 export const persistor = persistStore(store);
 
 export default store;

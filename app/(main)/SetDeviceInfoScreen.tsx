@@ -11,7 +11,6 @@ import { Icon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { AppRoutes } from '@/constants/AppRoutes';
 import NavigationService from '@/services/NavigationService';
-import { setDeviceAddress, setDeviceName, } from '@/store/slices/deviceSlice';
 import { RootState } from "@/store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, ArrowLeftIcon, ArrowRight, MapPin, SearchCheck } from "lucide-react-native";
@@ -20,6 +19,9 @@ import { Pressable as RPressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { z } from "zod";
 import { StepsLayout } from '../../components/add/StepsLayout';
+import { setDeviceLocation, setDeviceName, resetWizard } from '@/store/slices/deviceWizardSlice';
+
+import { completeWizardDevice } from '@/store/slices/deviceSlice';
 
 const inputSchema = z.object({
     deviceName: z.string().min(1, "Información obligatoria"),
@@ -31,7 +33,8 @@ type InputSchemaType = z.infer<typeof inputSchema>;
 const SetDeviceInfoScreen = () => {
 
     const dispatch = useDispatch();
-    const deviceNameInternal = useSelector((state: RootState) => state.device.currentDevice.deviceNameInternal);
+
+    const wizardDevice = useSelector((state: RootState) => state.wizard);
 
     const {
         control,
@@ -44,11 +47,15 @@ const SetDeviceInfoScreen = () => {
 
     const onSubmit = (data: InputSchemaType) => {
 
-        const address = data.deviceAddress !== undefined ? data.deviceAddress : '';
-        dispatch(setDeviceAddress(address));
-        dispatch(setDeviceName(data.deviceName)); // SIEMPRE PASAR EL DEVICE NAME COMO SEGUNDO
- 
-       reset();
+        const location = data.deviceAddress !== undefined ? data.deviceAddress : '';
+
+        dispatch(setDeviceName(location));
+        dispatch(setDeviceLocation(data.deviceName));
+
+        dispatch(completeWizardDevice(wizardDevice));
+        dispatch(resetWizard());
+
+        reset(); // Form reset
 
         NavigationService.navigate(AppRoutes.Access)
     };
@@ -78,7 +85,7 @@ const SetDeviceInfoScreen = () => {
                 <VStack className="md:items-center" space="md">
                     <VStack>
                         <Heading className="md:text-center" size="3xl">Indicar información</Heading>
-                        <Text>{deviceNameInternal}</Text>
+                        <Text>{wizardDevice.internalDeviceName}</Text>
                     </VStack>
                 </VStack>
                 <VStack className="w-full">

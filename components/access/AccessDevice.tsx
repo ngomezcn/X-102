@@ -22,9 +22,11 @@ import { Device } from "react-native-ble-plx";
 import { useBLEService } from '@/hooks/useBLEService'; // Asegúrate de ajustar la ruta
 import { Base64 } from 'js-base64';
 import log from "@/utils/logger";
+import { IotDevice } from "@/models/IoTDevice";
+import { BLESpecifications } from "@/models/Specifications";
 
 interface SingleDeviceProps {
-  deviceId: string;
+  iotDevice: IotDevice;
 }
 
 interface ListEntriesType {
@@ -68,13 +70,8 @@ const DashboardLayout = (props: any) => {
   );
 };
 
-export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
+export const AccessDevice: React.FC<SingleDeviceProps> = ({ iotDevice }) => {
 
-  const reduxDevices = useSelector((state: RootState) => state.device.devices);
-  const reduxDevicesList = Object.values(reduxDevices);
-  const reduxSingleDevice = reduxDevicesList[0];
-  const dispatch = useDispatch();
-  const selectedMac = deviceId || reduxSingleDevice?.mac;
   const { showToast } = useToastUtil();
 
   const [buttonState, setButtonState] = useState<string>(ButtonStates.idle); // Estado del botón
@@ -90,33 +87,45 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
 
     setButtonState(ButtonStates.loading);
 
-    console.log(selectedMac)
-
     try {
-      const granted = await BLEService.requestBluetoothPermissions();
 
-      if (granted) {
-        BLEService.setMac(selectedMac);
+      log.debug(iotDevice)
 
-        await BLEService.scanForDevice();
-        await BLEService.connectToDevice();
+      if (iotDevice.specifications?.type === 'BLE') {
 
-        const command = Base64.encode('AK=' + reduxSingleDevice.password);
-        await BLEService.sendCommand(serviceUUID, characteristicUUID, command);
+        const granted = await BLEService.requestBluetoothPermissions();
 
-        const data = await BLEService.receiveDataFromDevice(serviceUUID, characteristicUUID);
+        if (granted) {
 
-        await BLEService.disconnect();
+          const bleSpecs = iotDevice.specifications as BLESpecifications;
+          const macAddress = bleSpecs.mac!;
 
-        if (data.includes("OK")) {
-          setButtonState(ButtonStates.success);
+          BLEService.setMac(macAddress);
+
+          await BLEService.scanForDevice();
+          await BLEService.connectToDevice();
+
+          const command = Base64.encode('AK=' + bleSpecs.accessKey);
+          await BLEService.sendCommand(serviceUUID, characteristicUUID, command);
+
+          const data = await BLEService.receiveDataFromDevice(serviceUUID, characteristicUUID);
+
+          await BLEService.disconnect();
+
+          if (data.includes("OK")) {
+            setButtonState(ButtonStates.success);
+          } else {
+            setButtonState(ButtonStates.error);
+          }
+
         } else {
-          setButtonState(ButtonStates.error);
+          setButtonState(ButtonStates.idle);
         }
 
       } else {
-        setButtonState(ButtonStates.idle); 
+        console.warn('El dispositivo no es de tipo BLE, no se puede obtener la dirección MAC.');
       }
+
 
     } catch (error: any) {
       log.error("error " + error);
@@ -132,13 +141,13 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ deviceId }) => {
         <View className="">
           <VStack space="lg" className="items-center md:mt-14 mt-6 w-full md:px-10 md:pt-6 pb-4">
             <Text size="3xl" className="font-roboto text-dark font-bold">
-              {reduxSingleDevice.deviceName}
+              {iotDevice.name}
             </Text>
             <Text className="font-roboto text-sm text-typograpphy-800">
-              {reduxSingleDevice.deviceAddress}
+              {iotDevice.location}
             </Text>
             <Text className="font-roboto text-sm text-typograpphy-800">
-              {reduxSingleDevice.deviceNameInternal}
+              {iotDevice.internalDeviceName}
             </Text>
           </VStack>
 

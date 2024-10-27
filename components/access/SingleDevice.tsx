@@ -22,7 +22,7 @@ import { AppRoutes } from '@/constants/AppRoutes'
 import { Icon } from "@/components/ui/icon";
 import { Pressable as RPressable } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
-import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
+import { ModalQrManager } from "../add/ModalQrManager";
 import { HStack } from '../ui/hstack';
 import NavigationService from '@/services/NavigationService';
 import { Divider } from "@/components/ui/divider";

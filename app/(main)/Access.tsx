@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { RootState as ReduxRootState } from '@/store/store';
 
 import log from '@/utils/logger';
 import NavigationService from '@/services/NavigationService';
@@ -12,53 +13,36 @@ import { NoDevicesMessage } from "@/components/access/NoDevicesMessage";
 import { VStack } from "@/components/ui/vstack";
 import { useToastUtil } from "@/components/ToastUtil";
 import { useHeading } from "@/hooks/useHeading";
+import { IotDevice as iotDevice } from "@/models/IoTDevice";
+import { getSingleDevice } from "@/utils/DeviceUtils";
 
 const Access = () => {
-  const devices = useSelector((state: RootState) => state.device.devices);
-  const deviceList = Object.values(devices);
-  
-  const {setHeadingAppName,setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
-  setLeftArrowVisibility(false)
+  const devices = useSelector((state: ReduxRootState) => state.device.devices);
+  const [singleDevice, setSingleDevice] = useState<null | iotDevice>();
 
-  const [showSingleDevice, setShowSingleDevice] = useState(false);
-  const [singleDeviceParam, setSingleDeviceParam] = useState<string>("");
-
-
-  const handleShowSingleDevice = (param: string) => {
-    setSingleDeviceParam(param);
-    setShowSingleDevice(true);
+  const onDeviceSelect = (device: iotDevice) => {
+    setSingleDevice(device)
   };
 
   useEffect(() => {
-    const listener = (prevRoute: string, currentRoute: string) => {
-      console.log(`Ruta anterior: ${prevRoute}, Ruta actual: ${currentRoute}`);
+    setSingleDevice(getSingleDevice(devices))
+  });
 
-      setSingleDeviceParam("");
-      setShowSingleDevice(false);
-    };
+  useFocusEffect(() => {
+    setSingleDevice(getSingleDevice(devices))
+  });
 
-    NavigationService.subscribe(listener);
+  if (devices.length > 1) {
+    return <DeviceList devices={devices} onDeviceSelect={onDeviceSelect} />;
+  }
 
-    // Limpiar la suscripción al desmontar el componente
-    return () => {
-      NavigationService.listeners = NavigationService.listeners.filter(l => l !== listener);
-    };
-  }, []);
+  if (singleDevice) {
+    return <AccessDevice iotDevice={singleDevice} />;
+  }
 
-  return (
-    <>
-        {showSingleDevice ? (
-          <AccessDevice deviceId={singleDeviceParam} />
-        ) : deviceList.length > 1 ? (
-           <DeviceList onDeviceSelect={handleShowSingleDevice} />
-        ) : deviceList.length === 1 ? (
-          <AccessDevice deviceId={singleDeviceParam} />
-        ) : (
-          <NoDevicesMessage />
-        )}
-
-    </>
-  );
+  if (singleDevice === null) {
+    return <NoDevicesMessage />;
+  }
 };
 
 export default Access;

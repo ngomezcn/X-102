@@ -17,8 +17,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
-import { VerificationConnStringModal } from "./VerificationConnStringModal"
-import { resetDevice } from '@/store/slices/deviceSlice';
+import { VerificationConnStringModal } from "@/components/add/VerificationConnStringModal"
+import { resetWizard } from '@/store/slices/deviceWizardSlice';
 
 const inputConnStringModalSchema = z.object({
     connString: z.string().min(1, "Código de acceso requerido"),
@@ -46,8 +46,8 @@ export const InputConnStringModal: React.FC<ConnStringModalProps> = ({ isOpen, o
     });
 
     const onSubmit = (data: InputConnStringModalSchemaType) => {
-        dispatch(resetDevice()); // Nos aseguramos que el objeto para crear el device temporal no tiene datos
-        onContinue(data.connString);  
+        dispatch(resetWizard()); // Nos aseguramos que el objeto para crear el device temporal no tiene datos
+        onContinue(data.connString);  // Pasamos el connString en raw al siguiente modal
         reset();
         onClose();
     };

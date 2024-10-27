@@ -6,13 +6,16 @@ import { Spinner } from "@/components/ui/spinner";
 import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody } from "@/components/ui/modal";
 import { Heading } from "@/components/ui/heading";
 import { useDispatch, useSelector } from 'react-redux';
-import { setConnString, setMac, setPassword, setDeviceNameInternal } from '@/store/slices/deviceSlice';
+import { setDeviceName, startWizard, setInternalDeviceName, setConnectionString, setConnectionType, setConnectionStrategy } from '@/store/slices/deviceWizardSlice';
 import { useToastUtil } from '@/components/ToastUtil';
 import { RootState } from '@/store/store';
 import { AppRoutes } from '@/constants/AppRoutes';
 import { CheckCheck } from 'lucide-react-native';
 import { CryptoManager } from '@/components/CryptoManager'
 import NavigationService from '@/services/NavigationService';
+import { BLESpecifications, WiFiSpecifications } from '@/models/Specifications';
+import { deviceExists } from '@/utils/DeviceUtils';
+import { BLEConnection, WiFiConnection } from '@/models/Connection';
 
 interface VerificationConnStringModalProps {
     isOpen: boolean;
@@ -21,11 +24,11 @@ interface VerificationConnStringModalProps {
     connString: string;
 }
 
-export const VerificationConnStringModal: React.FC<VerificationConnStringModalProps> = ({ isOpen, onClose, finalFocusRef, connString }) => {
+export const VerificationConnStringModal: React.FC<VerificationConnStringModalProps> = ({ isOpen, onClose, finalFocusRef, connString: connectionString }) => {
     const [displayText, setDisplayText] = useState<string>("Please Wait");
     const [completed, setCompleted] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const { showToast } = useToastUtil(); // Use the toast utility
+    const { showToast } = useToastUtil();
 
     const devices = useSelector((state: RootState) => state.device.devices);
 
@@ -45,30 +48,44 @@ export const VerificationConnStringModal: React.FC<VerificationConnStringModalPr
     const validateAndProcess = async () => {
 
         try {
-
             await updateDisplayText("Procesando solicitud...", 500);
 
-            const decrypted = CryptoManager.decode(connString)
+            const decrypted = CryptoManager.decode(connectionString.trim())
             await updateDisplayText("Desencriptando...", 500);
 
             const values: string[] = decrypted.split(",");
-            const mac = values[0];
-            const deviceNameInternal = values[1];
-            const password = values[2];
 
-            // Verificar si ya existe la MAC
-            const existingDevice = devices[mac];
-            if (existingDevice) {
+            const connectionType = values[0];
+            const macBluetooth = values[1];
+            const internalDeviceName = values[2];
+            const accessKey = values[3];
+
+            if (deviceExists(devices, connectionString)) {
+                console.warn('El dispositivo con este connectionString ya existe');
                 showToast("Este dispositivo ya existe", 'error');
                 onClose();
-                return; // Salir si ya existe
+                return;
             }
+
             await updateDisplayText("Verificando...", 1000);
 
-            dispatch(setConnString(connString || ""));
-            dispatch(setMac(mac));
-            dispatch(setDeviceNameInternal(deviceNameInternal));
-            dispatch(setPassword(password));
+            dispatch(startWizard());
+            dispatch(setInternalDeviceName(internalDeviceName));
+            dispatch(setConnectionString(connectionString));
+            dispatch(setConnectionType(connectionType));
+
+            if (connectionType === 'BLE') {
+                const specifications: BLESpecifications = { type: 'BLE', mac: macBluetooth, accessKey: accessKey };
+                const connection = new BLEConnection(specifications);
+
+                dispatch(setConnectionStrategy(connection));
+
+            } else if (connectionType === 'WiFi') {
+                const specifications: WiFiSpecifications = { type: 'WiFi' };
+                const connection = new WiFiConnection(specifications);
+
+                dispatch(setConnectionStrategy(connection));
+            }
 
             await updateDisplayText("Finalizando...", 500);
             showToast("Código validado", 'success');

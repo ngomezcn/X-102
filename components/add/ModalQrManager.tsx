@@ -29,7 +29,7 @@ import {
 import { Textarea, TextareaInput } from "@/components/ui/textarea"
 import NavigationService from "@/services/NavigationService";
 
-export const ScanQrItem = () => {
+export const ModalQrManager = () => {
     return (
         <TouchableRipple
             onPress={() => NavigationService.navigate(AppRoutes.ToDo)}

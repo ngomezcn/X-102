@@ -5,8 +5,8 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import React from "react";
 import { ScrollView } from "react-native";
-import { ConnStringManager } from "../../components/add/connString/ConnStringManager";
-import { ScanQrItem } from "../../components/add/qr/ScanQrItem";
+import { ModalConnStringManager } from "../../components/add/ModalConnStringManager";
+import { ModalQrManager } from "../../components/add/ModalQrManager";
 import { useHeading } from "@/hooks/useHeading";
 
 const AddScreen = () => {
@@ -23,8 +23,8 @@ const AddScreen = () => {
         <Divider /> */}
 
         <VStack space="lg">
-          <ScanQrItem />
-          <ConnStringManager />
+          <ModalQrManager />
+          <ModalConnStringManager />
         </VStack>
 
         <Divider />

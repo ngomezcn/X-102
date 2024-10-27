@@ -4,6 +4,25 @@ import { createNavigationContainerRef, NavigationContainerRef } from '@react-nav
 
 type NavigationListener = (prevRoute: string, currentRoute: string) => void;
 
+/*
+Ejemplo para usar el subscription
+
+useEffect(() => {
+    const listener = (prevRoute: string, currentRoute: string) => {
+      // Aqui se podria ejecutar codigo al cambiar de vista
+    };
+    NavigationService.subscribe(listener);
+
+
+    return () => {
+
+      // Limpiar la suscripción al desmontar el componente
+      NavigationService.listeners = NavigationService.listeners.filter(l => l !== listener);
+    };
+  }, []);
+
+*/
+
 class NavigationService {
   private static navigationRef: NavigationContainerRef<any> = createNavigationContainerRef();
   public static listeners: Array<NavigationListener> = [];

@@ -17,11 +17,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { useDispatch } from 'react-redux'; 
-import { VerificationConnStringModal } from "./modals/VerificationConnStringModal"
-import { resetDevice } from '@/store/slices/deviceSlice';
-import { InputConnStringModal } from './modals/InputConnStringModal';
+import { VerificationConnStringModal } from "@/components/add/VerificationConnStringModal"
+import { InputConnStringModal } from './InputConnStringModal';
 
-export const ConnStringManager = () => {
+export const ModalConnStringManager = () => {
     const [showAccessModal, setShowAccessModal] = useState(false);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
     const accessModalRef = React.useRef(null); 

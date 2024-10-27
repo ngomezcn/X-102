@@ -85,11 +85,11 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
                     {buttonState === ButtonStates.loading ? (
                         <Spinner className="h-[145%] w-[145%]" color={'#FFFFFF'} /> // Muestra el spinner en lugar del ícono
                     ) : buttonState === ButtonStates.success ? (
-                        <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Check} />
+                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={Check} />
                     ) : buttonState === ButtonStates.error ? (
-                        <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={CircleX} />
+                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={CircleX} />
                     ) : (
-                        <Icon className="h-[45%] w-[45%]" style={{ color: '#FFFFFF' }} as={Power} />
+                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={Power} />
                     )}
 
                 </TouchableRipple>
