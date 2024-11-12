@@ -5,7 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 //import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
@@ -31,9 +31,7 @@ const inputSchema = z.object({
 type InputSchemaType = z.infer<typeof inputSchema>;
 
 const SetDeviceInfoScreen = () => {
-
     const dispatch = useDispatch();
-
     const wizardDevice = useSelector((state: RootState) => state.wizard);
 
     const {
@@ -46,18 +44,25 @@ const SetDeviceInfoScreen = () => {
     });
 
     const onSubmit = (data: InputSchemaType) => {
+        const location = data.deviceAddress?.trim() ? data.deviceAddress : 'Dirección del acceso sin especificar';
+        
+        // Realizamos los dispatch con los valores directamente
+        dispatch(setDeviceName(data.deviceName));
+        dispatch(setDeviceLocation(location));
 
-        const location = data.deviceAddress !== undefined ? data.deviceAddress : '';
+        // Enviar los datos directamente sin esperar a que Redux se actualice
+        const updatedWizardDevice = {
+            ...wizardDevice,
+            name: data.deviceName,
+            location: location,
+        };
 
-        dispatch(setDeviceName(location));
-        dispatch(setDeviceLocation(data.deviceName));
-
-        dispatch(completeWizardDevice(wizardDevice));
+        dispatch(completeWizardDevice(updatedWizardDevice));
         dispatch(resetWizard());
 
-        reset(); // Form reset
+        reset(); // Reset del formulario
 
-        NavigationService.navigate(AppRoutes.Access)
+        NavigationService.navigate(AppRoutes.Access);
     };
 
     return (
@@ -86,6 +91,8 @@ const SetDeviceInfoScreen = () => {
                     <VStack>
                         <Heading className="md:text-center" size="3xl">Indicar información</Heading>
                         <Text>{wizardDevice.internalDeviceName}</Text>
+                        <Text>{wizardDevice.specifications?.type}</Text>
+
                     </VStack>
                 </VStack>
                 <VStack className="w-full">

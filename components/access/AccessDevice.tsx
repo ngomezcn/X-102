@@ -81,8 +81,11 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ iotDevice }) => {
   const serviceUUID = '4c491e6a-38df-4d0f-b04b-8704a40071ce'; // Reemplaza con tu UUID de servicio
   const characteristicUUID = 'b0726341-e52e-471b-9cd6-4061e54616cc'; // Reemplaza con tu UUID de característica
 
-
   const handleButtonClick = async () => {
+
+    console.log("iotDevice")
+    console.log(iotDevice)
+
     if (buttonState === ButtonStates.loading) return;
 
     setButtonState(ButtonStates.loading);

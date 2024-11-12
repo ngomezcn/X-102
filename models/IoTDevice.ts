@@ -5,12 +5,11 @@ import { ConnectionSpecifications } from '@/models/Specifications';
 
 export interface IotDevice {
   id: string;
-  type?: string;
-  name?: string;
-  location?: string;
-  internalDeviceName?: string;
-  connectionString?: string;
-
-  connectionStrategy?: IConnectionStrategy;
-  specifications?: ConnectionSpecifications;
+  type?: string | null;
+  name?: string | null;
+  location?: string | null;
+  internalDeviceName?: string | null;
+  connectionString?: string | null;
+  connectionStrategy?: IConnectionStrategy | null;
+  specifications?: ConnectionSpecifications | null;
 }

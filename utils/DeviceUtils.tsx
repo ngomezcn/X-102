@@ -5,9 +5,9 @@ export const deviceExists = (devices: IotDevice[], connectionString: string): bo
 };
 // deviceUtils.js
 
-export const getSingleDevice = (devices: IotDevice[]): IotDevice | null | undefined => {
+export const getDeviceOrNull = (devices: IotDevice[]): IotDevice | undefined => {
   if (devices.length === 0) {
-    return null;
+    return undefined;
   } else {
     return devices[0];
   }

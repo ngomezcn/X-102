@@ -6,7 +6,7 @@ import deviceReducer from '@/store/slices/deviceSlice';
 import deviceWizardReducer from '@/store/slices/deviceWizardSlice';
 
 const persistConfig = {
-  key: 'dwatfa',
+  key: '222220241',
   storage: AsyncStorage,
 };
 

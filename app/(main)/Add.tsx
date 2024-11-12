@@ -3,16 +3,30 @@ import { Divider } from "@/components/ui/divider";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { ScrollView } from "react-native";
 import { ModalConnStringManager } from "../../components/add/ModalConnStringManager";
 import { ModalQrManager } from "../../components/add/ModalQrManager";
 import { useHeading } from "@/hooks/useHeading";
+import { useFocusEffect } from "expo-router";
 
 const AddScreen = () => {
 
-  const {setHeadingAppName,setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
-  setHeadingAppName("Añadir")
+  const { setHeadingAppName, setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setHeadingAppName('Añadir');
+      setIconVisibility(true);
+      setHeaderVisibility(true);
+      
+      return () => {
+        // Puedes restablecer el encabezado o limpiar si es necesario cuando se pierde el foco
+        setIconVisibility(false);
+        setHeaderVisibility(false);
+      };
+    }, [])
+  );
 
   return <>
     <ScrollView >

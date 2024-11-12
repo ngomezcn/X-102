@@ -18,14 +18,14 @@ export const deviceWizardSlice = createSlice({
     startWizard: (state) => {
       // Inicializamos el id y limpiamos cualquier estado previo
       state.id = uuidv4();
-      state.type = undefined;
-      state.name = undefined;
-      state.location = undefined;
-      state.internalDeviceName = undefined;
-      state.connectionString = undefined;
+      state.type = null;
+      state.name = null;
+      state.location = null;
+      state.internalDeviceName = null;
+      state.connectionString = null;
 
-      state.specifications = undefined;
-      state.connectionStrategy = undefined;
+      state.specifications = null;
+      state.connectionStrategy = null;
     },
     setDeviceName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
