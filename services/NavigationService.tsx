@@ -1,3 +1,4 @@
+
 import { AppRoutes } from '@/constants/AppRoutes';
 import log from '@/utils/logger';
 import { createNavigationContainerRef, NavigationContainerRef } from '@react-navigation/native';
@@ -44,6 +45,8 @@ class NavigationService {
     this.listeners.forEach(listener => listener(prevRoute, currentRoute));
   }
 
+
+  // Se ha de poner la pantalla la lista del AppContainer
   static navigate(routeName: string, params?: object): void {
     if (this.isReady()) {
       const prevRoute = this.getCurrentRoute();

@@ -1,3 +1,4 @@
+
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import {
@@ -123,6 +124,7 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ iotDevice }) => {
 
         } else {
           setButtonState(ButtonStates.idle);
+          await BLEService.disconnect();
         }
 
       } else {

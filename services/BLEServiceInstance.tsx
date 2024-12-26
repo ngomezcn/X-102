@@ -1,8 +1,10 @@
+
 import { BleManager, Device, Characteristic, BleError } from 'react-native-ble-plx';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { useEffect, useState } from 'react';
 import log from '../utils/logger';
 import { Base64 } from 'js-base64';
+import PermissionsService from './PermissionsService';
 
 class BLEServiceInstance {
   private manager: BleManager;
@@ -22,45 +24,15 @@ class BLEServiceInstance {
 
   // 2. Pedir permisos de Bluetooth (necesario para Android)
   async requestBluetoothPermissions(): Promise<boolean> {
-    log.debug('Requesting Bluetooth permission');
-
-    if (Platform.OS === 'ios') {
-      log.debug('Platform is iOS, no additional permissions required');
-      return true; // iOS permite el acceso sin permisos adicionales
-    }
-
-    const apiLevel = parseInt(Platform.Version.toString(), 10);
-    log.debug(`API Level: ${apiLevel}`);
-
-    if (apiLevel < 31) {
-      log.debug('Requesting ACCESS_FINE_LOCATION permission');
-      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-      const result = granted === PermissionsAndroid.RESULTS.GRANTED;
-      log.debug(`Location permission granted: ${result}`);
-      return result;
-    }
-
-    log.debug('Requesting multiple Bluetooth permissions');
-    const result = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    ]);
-
-    const allPermissionsGranted = (
-      result['android.permission.BLUETOOTH_CONNECT'] === PermissionsAndroid.RESULTS.GRANTED &&
-      result['android.permission.BLUETOOTH_SCAN'] === PermissionsAndroid.RESULTS.GRANTED &&
-      result['android.permission.ACCESS_FINE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
-    );
-
-    log.debug(`All permissions granted: ${allPermissionsGranted}`);
-    return allPermissionsGranted;
+      const allPermissionsGranted = await PermissionsService.requestAllPermissions();
+      return allPermissionsGranted;
   }
 
   public async scanForDevice() {
     log.debug('Starting scan for devices');
 
     return new Promise<Device>((resolve, reject) => {
+      
       let deviceFound = false; // Para indicar si se encontró el dispositivo
       const timeout = setTimeout(() => {
         if (!deviceFound) {

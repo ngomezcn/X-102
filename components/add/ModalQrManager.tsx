@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
@@ -32,7 +34,7 @@ import NavigationService from "@/services/NavigationService";
 export const ModalQrManager = () => {
     return (
         <TouchableRipple
-            onPress={() => NavigationService.navigate(AppRoutes.ToDo)}
+            onPress={() => NavigationService.navigate(AppRoutes.ScanQR)}
             rippleColor="rgba(0, 0, 0, .32)">
             <HStack className="justify-between">
                 <HStack space="md">
@@ -42,7 +44,7 @@ export const ModalQrManager = () => {
                         <BadgeText>Recomendado</BadgeText>
                     </Badge>
                 </HStack>
-                <RPressable onPress={() => NavigationService.navigate(AppRoutes.ToDo)}>
+                <RPressable onPress={() => NavigationService.navigate(AppRoutes.ScanQR)}>
 
                     {({ pressed }) => (
                         <Icon

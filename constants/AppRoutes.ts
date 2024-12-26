@@ -10,6 +10,7 @@ export const AppRoutes = {
     ToDo: "todo",
     Test: "test",
     Access: "access",
+    ScanQR: "scanqr",
     AccessRoutes: {
         DevicesList: "access-devices-list",
         NoDevicesMessage: "access-no-devices-message",

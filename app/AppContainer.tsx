@@ -1,3 +1,4 @@
+
 import BottomNavigationView from "@/components/navigation/BottomNavigation";
 import React from "react";
 import AppHeader from "@/components/header/Header";
@@ -14,6 +15,7 @@ import Access from "./(main)/Access";
 import AddScreen from "./(main)/Add";
 import SetDeviceInfoScreen from "./(main)/SetDeviceInfoScreen";
 import Test from "./(main)/Test";
+import ScanQr from "./(main)/ScanQr";
 let defaultTheme: "dark" | "light" = "light";
 
 const Stack = createNativeStackNavigator();
@@ -47,6 +49,7 @@ const AppContainer = () => {
                 >
                   <Stack.Screen name={AppRoutes.Access} component={Access} />
                   <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
+                  <Stack.Screen name={AppRoutes.ScanQR} component={ScanQr} />
                   <Stack.Screen name={AppRoutes.Test} component={Test} />
                   <Stack.Screen
                     name={AppRoutes.SetDeviceInfoScreen}
