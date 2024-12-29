@@ -33,8 +33,6 @@ export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children })
     const [isHeaderVisible, setHeaderVisible] = useState<boolean>(true);
     const [isLeftArrowVisible, setLeftArrowVisible] = useState<boolean>(true);
 
-
-
     const setHeadingAppName = (name: string) => {
         setHeading(name);
     };

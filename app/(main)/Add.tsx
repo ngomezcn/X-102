@@ -32,10 +32,6 @@ const AddScreen = () => {
     <ScrollView >
       <VStack className="px-5 py-4 flex-1" space="lg">
 
-        {/*<Heading className="md">Añadir Gate</Heading>
-
-        <Divider /> */}
-
         <VStack space="lg">
           <ModalQrManager />
           <ModalConnStringManager />

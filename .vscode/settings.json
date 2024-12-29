@@ -4,5 +4,6 @@
         "android": true,
         "ios": true,
         "node_modules": true
-    }
+    },
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

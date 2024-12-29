@@ -58,24 +58,18 @@ const ScanQr = () => {
   const cameraRef = useRef<CameraView>(null);
 
   const { setHeadingAppName, setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+
   useFocusEffect(
     React.useCallback(() => {
       setHeadingAppName('Escanear QR');
-      setIconVisibility(true);
+      setIconVisibility(false);
       setHeaderVisibility(true);
 
-      return () => {
-        // Puedes restablecer el encabezado o limpiar si es necesario cuando se pierde el foco
-        setIconVisibility(false);
-        setHeaderVisibility(false);
-      };
+
     }, [])
   );
 
-  useEffect(() => {
 
-  },
-    []);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -95,18 +89,23 @@ const ScanQr = () => {
       </View>
     );
   }
+ 
+  useEffect(() => {
+    if (connString) {
+      setShowVerificationModal(true);
+    }
+  }, [connString]);
 
   function showModal(data: any) {
     if (cameraRef.current) {
       cameraRef.current.pausePreview();
     }
+    console.log(data)
     setConnString(data)
-    setShowVerificationModal(true)
   }
 
   return <>
-    <VStack className="px-5 py-4 flex-1" space="lg">
-      <Text>AAA</Text>
+    <VStack className="flex-1" space="lg">
       <VerificationConnStringModal
         isOpen={showVerificationModal}
         onClose={() => setShowVerificationModal(false)}
@@ -117,11 +116,11 @@ const ScanQr = () => {
       <View style={styles.container}>
         <CameraView
           style={styles.camera}
-          ref={cameraRef} 
+          ref={cameraRef}
           facing={facing}
           onBarcodeScanned={({ data }) => {
             showModal(data)
-            
+
           }}>
         </CameraView>
       </View>
