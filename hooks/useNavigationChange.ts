@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+/*import { useEffect, useRef } from 'react';
 
 const useNavigationChange = (callback) => {
   const location = useLocation();
@@ -16,3 +16,4 @@ const useNavigationChange = (callback) => {
 };
 
 export default useNavigationChange;
+*/

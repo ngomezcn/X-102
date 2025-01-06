@@ -46,7 +46,7 @@ export const VerificationConnStringModal: React.FC<VerificationConnStringModalPr
     };
 
     const validateAndProcess = async () => {
-
+        
         try {
             await updateDisplayText("Procesando solicitud...", 500);
 

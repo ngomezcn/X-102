@@ -1,12 +1,20 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Define la forma del contexto
+interface HeaderSettings {
+    heading: string;
+    isIconVisible: boolean;
+    isHeaderVisible: boolean;
+    isLeftArrowVisible: boolean;
+}
+
 interface HeadingContextType {
 
-    setHeadingAppName: (name: string) => void;
+    setHeaderSettings: (headerSettings: HeaderSettings) => void;
+
+   /* setHeadingAppName: (name: string) => void;
     setIconVisibility: (visible: boolean) => void;
     setHeaderVisibility: (visible: boolean) => void;
-    setLeftArrowVisibility: (visible: boolean) => void;
+    setLeftArrowVisibility: (visible: boolean) => void;*/
 
     heading: string;
     isIconVisible: boolean;
@@ -28,6 +36,7 @@ export const useHeading = (): HeadingContextType => {
 
 // Proveedor del contexto
 export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+
     const [heading, setHeading] = useState<string>("Smart Gate");
     const [isIconVisible, setIconVisible] = useState<boolean>(true);
     const [isHeaderVisible, setHeaderVisible] = useState<boolean>(true);
@@ -49,13 +58,21 @@ export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children })
         setLeftArrowVisible(visible);
     };
 
+    const setHeaderSettings = (headerSettings: HeaderSettings) => {
+        setHeading(headerSettings.heading);
+        setIconVisible(headerSettings.isIconVisible);
+        setHeaderVisible(headerSettings.isHeaderVisible);
+        setLeftArrowVisible(headerSettings.isLeftArrowVisible);
+    };
+
     return (
         <HeadingContext.Provider
             value={{
-                setHeadingAppName,
+                setHeaderSettings,
+                /*setHeadingAppName,
                 setIconVisibility,
                 setHeaderVisibility,
-                setLeftArrowVisibility,
+                setLeftArrowVisibility,*/
                 heading,
                 isIconVisible,
                 isHeaderVisible,

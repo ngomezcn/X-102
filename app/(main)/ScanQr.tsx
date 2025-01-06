@@ -50,45 +50,25 @@ const styles = StyleSheet.create({
 const ScanQr = () => {
 
   const [facing, setFacing] = useState<CameraType>('back');
-  const [permission, requestPermission] = useCameraPermissions();
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [connString, setConnString] = useState<string | null>(null);
   const verificationModalRef = React.useRef(null);
 
   const cameraRef = useRef<CameraView>(null);
 
-  const { setHeadingAppName, setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+  const { setHeaderSettings } = useHeading();
 
   useFocusEffect(
     React.useCallback(() => {
-      setHeadingAppName('Escanear QR');
-      setIconVisibility(false);
-      setHeaderVisibility(true);
-
-
+      setHeaderSettings({
+        heading: "Escanear QR",
+        isIconVisible: false,
+        isHeaderVisible: true,
+        isLeftArrowVisible: true,
+    });
     }, [])
   );
 
-
-
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-
-    //permission = await PermissionsService.requestAllPermissions();
-    //return allPermissionsGranted;
-
-    return (
-      <View >
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
  
   useEffect(() => {
     if (connString) {

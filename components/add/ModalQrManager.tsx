@@ -1,6 +1,6 @@
 
 
-import React from "react";
+import React, { useState } from "react";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { ButtonGroup } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import { Button, ButtonIcon } from "@/components/ui/button";
 import { ButtonText } from "@/components/ui/button";
 import { BadgeText } from "@/components/ui/badge";
 import { ScrollView } from "react-native";
-import { ArrowRight, Blinds, BookKey, Camera, ChevronDown, ChevronDownCircleIcon, ChevronRight, FileKey, FileWarning, GlobeIcon, Key, LucideQrCode, Plus, PlusCircleIcon, QrCode, QrCodeIcon, Scan, ScanLine, ScanQrCode, Settings, Tablets, TriangleAlert } from "lucide-react-native";
 import { AppRoutes } from '@/constants/AppRoutes'
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Pressable as RPressable } from 'react-native';
@@ -30,11 +29,33 @@ import {
 } from "@/components/ui/modal"
 import { Textarea, TextareaInput } from "@/components/ui/textarea"
 import NavigationService from "@/services/NavigationService";
+import { CameraView, CameraType, useCameraPermissions, Camera } from 'expo-camera';
+import { ChevronRight, ScanLine } from "lucide-react-native";
 
 export const ModalQrManager = () => {
+
+    const [permission, requestPermission] = useCameraPermissions();
+    const [loading, setLoading] = useState(false);
+
+    const handlePress = async () => {
+        setLoading(true);
+        if (!permission || !permission.granted) {
+            const { granted } = await requestPermission();
+            if (!granted) {
+                setLoading(false);
+                alert("Se necesitan permisos de cámara para escanear QR.");
+                return;
+            }
+        }
+        setLoading(false);
+        NavigationService.navigate(AppRoutes.ScanQR);
+    };
+
     return (
         <TouchableRipple
-            onPress={() => NavigationService.navigate(AppRoutes.ScanQR)}
+            //onPress={() => NavigationService.navigate(AppRoutes.ScanQR)}
+            onPress={handlePress}
+
             rippleColor="rgba(0, 0, 0, .32)">
             <HStack className="justify-between">
                 <HStack space="md">

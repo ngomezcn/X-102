@@ -1,34 +1,39 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import NavigationService from "@/services/NavigationService";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-
-import { bottomTabs } from '@/constants/AppRoutes'; // Ajusta la ruta de importación
-import NavigationService from "@/services/NavigationService";
-import { tabRoutes } from "@/constants/TabRoutes";
-import { AppRoutes } from "@/constants/AppRoutes";
 import { View } from 'react-native';
+import { bottomTabs } from '@/constants/AppRoutes';
+import { tabRoutes } from "@/constants/TabRoutes";
 
 const BottomNavigationView = () => {
+  const [currentRoute, setCurrentRoute] = useState<string | null>(NavigationService.getCurrentRoute());
 
-  const [currentRoute, setCurrentRoute] = useState(NavigationService.getCurrentRoute());
+  useEffect(() => {
+    // Suscríbete a los cambios en la ruta actual
+    const unsubscribe = NavigationService.subscribe((route) => {
+      setCurrentRoute(route); // Actualiza el estado cuando cambie la ruta
+    });
+
+    return () => {
+      //unsubscribe(); // Limpia la suscripción al desmontar el componente
+    };
+  }, []);
 
   const handleNavigation = (label: string) => {
-    setCurrentRoute(label);
     NavigationService.navigate(label);
   };
 
-  const isTabVisible = tabRoutes.includes(currentRoute);
+  const isTabVisible = currentRoute && tabRoutes.includes(currentRoute);
 
   if (!isTabVisible) {
-    //return null;
+    return null;
   }
 
   return (
-
     <View className="border-t border-gray-100 h-16 flex justify-center items-center bg-white">
       <HStack className="content-center justify-between mx-auto" style={{ width: '90%', maxWidth: 270 }}>
         {bottomTabs.map((tab) => (
@@ -51,10 +56,10 @@ const BottomNavigationView = () => {
               <Text
                 size="xs"
                 className={`${currentRoute === tab.id
-                  ? "text-typography-900 font-bold" // Añadido "font-bold" para negrita
+                  ? "text-typography-900 font-bold"
                   : "text-typography-400"
                   }`}
-                style={{ paddingTop: 5 }} // Añadir padding entre el icono y el texto
+                style={{ paddingTop: 5 }}
               >
                 {tab.label}
               </Text>
@@ -63,7 +68,6 @@ const BottomNavigationView = () => {
         ))}
       </HStack>
     </View>
-
   );
 };
 

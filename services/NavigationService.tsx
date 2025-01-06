@@ -1,4 +1,3 @@
-
 import { AppRoutes } from '@/constants/AppRoutes';
 import log from '@/utils/logger';
 import { createNavigationContainerRef, NavigationContainerRef } from '@react-navigation/native';
@@ -29,6 +28,8 @@ class NavigationService {
   public static listeners: Array<NavigationListener> = [];
   private static currentRoute: string | null = null;
 
+  private static prevRoute : string= AppRoutes.Access;
+
   static getRef() {
     return this.navigationRef;
   }
@@ -49,11 +50,11 @@ class NavigationService {
   // Se ha de poner la pantalla la lista del AppContainer
   static navigate(routeName: string, params?: object): void {
     if (this.isReady()) {
-      const prevRoute = this.getCurrentRoute();
+      this.prevRoute = this.getCurrentRoute();
       log.debug(`Navegando a: ${routeName}`);
       this.navigationRef.navigate(routeName, params);
       this.currentRoute = routeName; // Actualizamos la ruta actual
-      this.notifyListeners(prevRoute, routeName); // Notificamos a los escuchadores
+      this.notifyListeners(this.prevRoute, routeName); // Notificamos a los escuchadores
     } else {
       log.warn('Referencia de navegación no está lista');
     }
@@ -70,15 +71,7 @@ class NavigationService {
   }
 
   static goBack(): void {
-    if (this.isReady()) {
-      const prevRoute = this.getCurrentRoute();
-      log.debug('Regresando a la ruta anterior');
-      this.navigationRef.goBack();
-      const newRoute = this.getCurrentRoute(); // Obtenemos la nueva ruta después de hacer goBack
-      this.notifyListeners(prevRoute, newRoute);
-    } else {
-      log.warn('Referencia de navegación no está lista');
-    }
+    this.navigate(this.prevRoute)
   }
 }
 

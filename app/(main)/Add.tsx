@@ -12,19 +12,23 @@ import { useFocusEffect } from "expo-router";
 
 const AddScreen = () => {
 
-  const { setHeadingAppName, setIconVisibility, setHeaderVisibility, setLeftArrowVisibility } = useHeading();
+  const { setHeaderSettings } = useHeading();
 
   useFocusEffect(
     React.useCallback(() => {
-      setHeadingAppName('Añadir');
-      setIconVisibility(true);
-      setHeaderVisibility(true);
-      
-      return () => {
+
+      setHeaderSettings({
+        heading: "Añadir",
+        isIconVisible: false,
+        isHeaderVisible: true,
+        isLeftArrowVisible: true,
+    });
+
+      /*return () => {
         // Puedes restablecer el encabezado o limpiar si es necesario cuando se pierde el foco
         setIconVisibility(false);
         setHeaderVisibility(false);
-      };
+      };*/
     }, [])
   );
 

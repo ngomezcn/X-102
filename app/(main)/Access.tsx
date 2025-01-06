@@ -12,22 +12,26 @@ const Access = () => {
   const devices = useSelector((state: ReduxRootState) => state.device.devices);
   const [singleDevice, setSingleDevice] = useState<iotDevice | undefined>(undefined);
 
-  const { setHeadingAppName, setIconVisibility, setHeaderVisibility } = useHeading();
+  const { setHeaderSettings } = useHeading();
 
   useFocusEffect(
     React.useCallback(() => {
-      setHeadingAppName('Añadir');
-      setIconVisibility(true);
-      setHeaderVisibility(true);
+      
+      setHeaderSettings({
+        heading: "Acceso",
+        isIconVisible: false,
+        isHeaderVisible: true,
+        isLeftArrowVisible: false,
+    });
 
       // Reiniciamos singleDevice a undefined cuando la vista se enfoca
       setSingleDevice(undefined);
       
       return () => {
-        setIconVisibility(false);
-        setHeaderVisibility(false);
+       /* setIconVisibility(false);
+        setHeaderVisibility(false);*/
       };
-    }, [setHeadingAppName, setIconVisibility, setHeaderVisibility])
+    }, [])
   );
 
   const onDeviceSelect = (device: iotDevice) => {
