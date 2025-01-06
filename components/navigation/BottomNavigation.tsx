@@ -14,12 +14,13 @@ const BottomNavigationView = () => {
 
   useEffect(() => {
     // Suscríbete a los cambios en la ruta actual
-    const unsubscribe = NavigationService.subscribe((route) => {
-      setCurrentRoute(route); // Actualiza el estado cuando cambie la ruta
+    const unsubscribe = NavigationService.subscribe((_, newRoute) => {
+      console.log('Cambio de ruta detectado: ', newRoute);
+      setCurrentRoute(newRoute);
     });
 
     return () => {
-      //unsubscribe(); // Limpia la suscripción al desmontar el componente
+      unsubscribe(); // Limpia la suscripción al desmontar
     };
   }, []);
 

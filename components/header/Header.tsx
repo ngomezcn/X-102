@@ -8,14 +8,19 @@ import { Heading } from "@/components/ui/heading";
 import NavigationService from '@/services/NavigationService';
 
 const AppHeader: React.FC = () => {
-    const { heading, isIconVisible, isHeaderVisible, isLeftArrowVisible } = useHeading();
+    const { heading, isIconVisible, isHeaderVisible, isLeftArrowVisible, goBackRoute } = useHeading();
 
     const handleBackPress = () => {
-       NavigationService.goBack();
+        if (goBackRoute) {
+            NavigationService.navigate(goBackRoute);
+            return;
+        } else {
+            NavigationService.goBack();
+        }
     };
 
     if (!isHeaderVisible) {
-        return null; 
+        return null;
     }
 
     return (

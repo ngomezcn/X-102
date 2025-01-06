@@ -7,6 +7,7 @@ import { DeviceList } from "@/components/access/DeviceList";
 import { NoDevicesMessage } from "@/components/access/NoDevicesMessage";
 import { useHeading } from "@/hooks/useHeading";
 import { IotDevice as iotDevice } from "@/models/IoTDevice";
+import { AppRoutes } from "@/constants/AppRoutes";
 
 const Access = () => {
   const devices = useSelector((state: ReduxRootState) => state.device.devices);
@@ -22,6 +23,7 @@ const Access = () => {
         isIconVisible: false,
         isHeaderVisible: true,
         isLeftArrowVisible: false,
+        goBackRoute: null, 
     });
 
       // Reiniciamos singleDevice a undefined cuando la vista se enfoca

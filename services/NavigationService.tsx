@@ -1,34 +1,17 @@
 import { AppRoutes } from '@/constants/AppRoutes';
 import log from '@/utils/logger';
 import { createNavigationContainerRef, NavigationContainerRef } from '@react-navigation/native';
+import { NavigationState } from '@react-navigation/native';
+import { useHeading } from '@/hooks/useHeading';
 
 type NavigationListener = (prevRoute: string, currentRoute: string) => void;
-
-/*
-Ejemplo para usar el subscription
-
-useEffect(() => {
-    const listener = (prevRoute: string, currentRoute: string) => {
-      // Aqui se podria ejecutar codigo al cambiar de vista
-    };
-    NavigationService.subscribe(listener);
-
-
-    return () => {
-
-      // Limpiar la suscripción al desmontar el componente
-      NavigationService.listeners = NavigationService.listeners.filter(l => l !== listener);
-    };
-  }, []);
-
-*/
 
 class NavigationService {
   private static navigationRef: NavigationContainerRef<any> = createNavigationContainerRef();
   public static listeners: Array<NavigationListener> = [];
   private static currentRoute: string | null = null;
 
-  private static prevRoute : string= AppRoutes.Access;
+  private static prevRoute: string = AppRoutes.Access;
 
   static getRef() {
     return this.navigationRef;
@@ -38,23 +21,37 @@ class NavigationService {
     return this.navigationRef.isReady();
   }
 
-  static subscribe(listener: NavigationListener): void {
+  static subscribe(listener: NavigationListener): () => void {
     this.listeners.push(listener);
+    // Devuelve una función para desuscribirse
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
   }
 
-  private static notifyListeners(prevRoute: string, currentRoute: string): void {
-    this.listeners.forEach(listener => listener(prevRoute, currentRoute));
+  private static notifyListeners(prevRoute: string | null, currentRoute: string | null): void {
+    this.listeners.forEach((listener) => {
+      listener(prevRoute || '', currentRoute || '');
+    });
   }
 
+  static handleStateChange(state: NavigationState | undefined): void {
+    if (!state || !state.routes || state.routes.length === 0) return;
 
-  // Se ha de poner la pantalla la lista del AppContainer
+    const route = state.routes[state.index];
+    const newRoute = route.name;
+    if (newRoute !== this.currentRoute) {
+      const prevRoute = this.currentRoute;
+      this.currentRoute = newRoute;
+      this.prevRoute = prevRoute || "";
+      this.notifyListeners(prevRoute || "", newRoute);
+    }
+  }
+
   static navigate(routeName: string, params?: object): void {
     if (this.isReady()) {
-      this.prevRoute = this.getCurrentRoute();
       log.debug(`Navegando a: ${routeName}`);
       this.navigationRef.navigate(routeName, params);
-      this.currentRoute = routeName; // Actualizamos la ruta actual
-      this.notifyListeners(this.prevRoute, routeName); // Notificamos a los escuchadores
     } else {
       log.warn('Referencia de navegación no está lista');
     }
@@ -72,6 +69,14 @@ class NavigationService {
 
   static goBack(): void {
     this.navigate(this.prevRoute)
+   /*const { goBackRoute } = useHeading();
+
+    if(goBackRoute != null) {
+      this.navigate(goBackRoute);
+      return;
+    } else { 
+      this.navigate(this.prevRoute)
+    }*/
   }
 }
 

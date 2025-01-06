@@ -15,6 +15,7 @@ import PermissionsService from "@/services/PermissionsService";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Overlay } from "@gluestack-ui/overlay";
 import { VerificationConnStringModal } from "@/components/add/VerificationConnStringModal";
+import { AppRoutes } from "@/constants/AppRoutes";
 
 const styles = StyleSheet.create({
   container: {
@@ -65,6 +66,7 @@ const ScanQr = () => {
         isIconVisible: false,
         isHeaderVisible: true,
         isLeftArrowVisible: true,
+        goBackRoute: AppRoutes.Add, 
     });
     }, [])
   );

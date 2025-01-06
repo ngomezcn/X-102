@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { PermissionsAndroid, Alert, Button, View } from "react-native";
 
 import { LogBox } from 'react-native';
-import log from '@/utils/logger'; // Importa el logger
+import log from '@/utils/logger';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from '../store/store';

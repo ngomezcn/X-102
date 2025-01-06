@@ -35,7 +35,12 @@ const AppContainer = () => {
         backgroundColor="#ffffff"/>
         
       <GluestackUIProvider mode={colorMode}>
-        <NavigationContainer ref={NavigationService.getRef()} independent={true}>
+        <NavigationContainer 
+        ref={NavigationService.getRef()}
+         independent={true}
+         onStateChange={(state) => NavigationService.handleStateChange(state)}
+         
+         >
           <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
               <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>

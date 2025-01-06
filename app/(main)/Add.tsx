@@ -9,6 +9,7 @@ import { ModalConnStringManager } from "../../components/add/ModalConnStringMana
 import { ModalQrManager } from "../../components/add/ModalQrManager";
 import { useHeading } from "@/hooks/useHeading";
 import { useFocusEffect } from "expo-router";
+import { AppRoutes } from "@/constants/AppRoutes";
 
 const AddScreen = () => {
 
@@ -21,7 +22,8 @@ const AddScreen = () => {
         heading: "Añadir",
         isIconVisible: false,
         isHeaderVisible: true,
-        isLeftArrowVisible: true,
+        isLeftArrowVisible: false,
+        goBackRoute: null, 
     });
 
       /*return () => {

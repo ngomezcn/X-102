@@ -1,25 +1,21 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { AppRoutes } from '@/constants/AppRoutes';
 
 interface HeaderSettings {
     heading: string;
     isIconVisible: boolean;
     isHeaderVisible: boolean;
     isLeftArrowVisible: boolean;
+    goBackRoute: string | null; 
 }
 
 interface HeadingContextType {
-
     setHeaderSettings: (headerSettings: HeaderSettings) => void;
-
-   /* setHeadingAppName: (name: string) => void;
-    setIconVisibility: (visible: boolean) => void;
-    setHeaderVisibility: (visible: boolean) => void;
-    setLeftArrowVisibility: (visible: boolean) => void;*/
-
     heading: string;
     isIconVisible: boolean;
     isHeaderVisible: boolean;
     isLeftArrowVisible: boolean;
+    goBackRoute: string | null; 
 }
 
 // Crea el contexto
@@ -41,42 +37,25 @@ export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children })
     const [isIconVisible, setIconVisible] = useState<boolean>(true);
     const [isHeaderVisible, setHeaderVisible] = useState<boolean>(true);
     const [isLeftArrowVisible, setLeftArrowVisible] = useState<boolean>(true);
-
-    const setHeadingAppName = (name: string) => {
-        setHeading(name);
-    };
-
-    const setIconVisibility = (visible: boolean) => {
-        setIconVisible(visible);
-    };
-
-    const setHeaderVisibility = (visible: boolean) => {
-        setHeaderVisible(visible);
-    };
-
-    const setLeftArrowVisibility = (visible: boolean) => {
-        setLeftArrowVisible(visible);
-    };
+    const [goBackRoute, setGoBackRoute] = useState<string | null>(AppRoutes.Access);
 
     const setHeaderSettings = (headerSettings: HeaderSettings) => {
         setHeading(headerSettings.heading);
         setIconVisible(headerSettings.isIconVisible);
         setHeaderVisible(headerSettings.isHeaderVisible);
         setLeftArrowVisible(headerSettings.isLeftArrowVisible);
+        setGoBackRoute(headerSettings.goBackRoute);
     };
 
     return (
         <HeadingContext.Provider
             value={{
                 setHeaderSettings,
-                /*setHeadingAppName,
-                setIconVisibility,
-                setHeaderVisibility,
-                setLeftArrowVisibility,*/
                 heading,
                 isIconVisible,
                 isHeaderVisible,
                 isLeftArrowVisible,
+                goBackRoute,
             }}
         >
             {children}
