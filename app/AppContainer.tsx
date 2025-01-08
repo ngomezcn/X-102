@@ -17,6 +17,8 @@ import SetDeviceInfoScreen from "./(main)/SetDeviceInfoScreen";
 import Test from "./(main)/Test";
 import ScanQr from "./(main)/ScanQr";
 import { AccessDevice } from "@/components/access/AccessDevice";
+import DeviceOptions from "./(main)/DeviceOptions";
+import DeviceFeatures from "./(main)/DeviceFeatures";
 let defaultTheme: "dark" | "light" = "light";
 
 const Stack = createNativeStackNavigator();
@@ -58,6 +60,9 @@ const AppContainer = () => {
                   <Stack.Screen name={AppRoutes.Access} component={Access} />
                   <Stack.Screen name={AppRoutes.Add} component={AddScreen} />
                   <Stack.Screen name={AppRoutes.ScanQR} component={ScanQr} />
+                  <Stack.Screen name={AppRoutes.DeviceOptions} component={DeviceOptions} />
+                  <Stack.Screen name={AppRoutes.DeviceFeatures} component={DeviceFeatures} />
+
                   <Stack.Screen name={AppRoutes.Test} component={Test} />
                   <Stack.Screen
                     name={AppRoutes.SetDeviceInfoScreen}

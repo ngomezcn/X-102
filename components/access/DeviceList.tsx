@@ -29,37 +29,34 @@ export const DeviceList: React.FC<Props> = ({ devices }) => {
 
   return (
     <>
-      <ScrollView>
-        <VStack className="px-4 py-4 flex-1">
-          <FlatList
-            data={devices}
-            keyExtractor={(device) => device.id}
-            renderItem={({ item }: { item: IoTDevice }) => (
-              <Card className="rounded-lg border border-gray-300 mb-4">
-                <Text className="text-sm font-normal mb-2 text-typography-700">
-                  {item.internalDeviceName}
+      <VStack className="px-4 py-4 flex-1">
+        <FlatList
+          data={devices}
+          keyExtractor={(device) => device.id}
+          renderItem={({ item }: { item: IoTDevice }) => (
+            <Card className="rounded-lg border border-gray-300 mb-4">
+              <Text className="text-sm font-normal mb-2 text-typography-700">
+                {item.internalDeviceName}
+              </Text>
+              <VStack className="mb-6">
+                <Heading size="md" className="mb-2">
+                  {item.name}
+                </Heading>
+                <Text size="sm">
+                  {item.location}
                 </Text>
-                <VStack className="mb-6">
-                  <Heading size="md" className="mb-2">
-                    {item.name}
-                  </Heading>
-                  <Text size="sm">
-                    {item.location}
-                  </Text>
-                </VStack>
-                <Box className="flex-col sm:flex-row">
-                  <Button
-                    onPress={() => handlePress(item)}
-                    className="px-4 py-2 mr-0 mb-3 sm:mr-3 sm:mb-0 sm:flex-1">
-                    <ButtonText size="sm">Acceder</ButtonText>
-                  </Button>
-                </Box>
-              </Card>
-            )}
-          />
-          <Divider />
-        </VStack>
-      </ScrollView>
+              </VStack>
+              <Box className="flex-col sm:flex-row">
+                <Button
+                  onPress={() => handlePress(item)}
+                  className="px-4 py-2 mr-0 mb-3 sm:mr-3 sm:mb-0 sm:flex-1">
+                  <ButtonText size="sm">Acceder</ButtonText>
+                </Button>
+              </Box>
+            </Card>
+          )}
+        />
+      </VStack>
     </>
   );
 };

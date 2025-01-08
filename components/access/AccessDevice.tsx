@@ -29,6 +29,7 @@ import { useFocusEffect } from "expo-router";
 import { useHeading } from "@/hooks/useHeading";
 import { AppRoutes } from "@/constants/AppRoutes";
 import { BleHandler } from "@/services/BLEServiceInstance";
+import NavigationService from "@/services/NavigationService";
 
 interface ListEntriesType {
   iconName: LucideIcon | typeof UIIcon;
@@ -191,27 +192,44 @@ export const AccessDevice = () => {
             </Text>
           </VStack>
 
-          {/* Este VStack es el que tenías en la parte inferior */}
           <VStack space="lg" >
             <Divider />
-            {listEntries.map((item, index) => (
-              <TouchableRipple key={index} rippleColor="rgba(0, 0, 0, .32)">
+            <TouchableRipple rippleColor="rgba(0, 0, 0, .32)"
+              onPress={() => NavigationService.navigate(AppRoutes.DeviceOptions)}
+            >
                 <HStack className="justify-between">
                   <HStack space="md">
-                    <Icon as={item.iconName} />
-                    <Text>{item.subText}</Text>
+                    <Icon as={Settings2} />
+                    <Text>{"Opciones del dispositivo"}</Text>
                   </HStack>
-                  <RPressable>
+                  <RPressable onPress={() =>  NavigationService.navigate(AppRoutes.DeviceOptions)}>
                     {({ pressed }) => (
                       <Icon
-                        as={item.endIcon}
+                        as={ChevronRightIcon}
                         className={`${pressed ? "text-background-500" : "text-background-800"} md:hidden`}
                       />
                     )}
                   </RPressable>
                 </HStack>
               </TouchableRipple>
-            ))}
+              <TouchableRipple rippleColor="rgba(0, 0, 0, .32)"
+              onPress={() => NavigationService.navigate(AppRoutes.DeviceFeatures)}
+              >
+                <HStack className="justify-between">
+                  <HStack space="md">
+                    <Icon as={Boxes} />
+                    <Text>{"Funcionalidades"}</Text>
+                  </HStack>
+                  <RPressable onPress={() =>  NavigationService.navigate(AppRoutes.DeviceFeatures)}>
+                    {({ pressed }) => (
+                      <Icon
+                        as={ChevronRightIcon}
+                        className={`${pressed ? "text-background-500" : "text-background-800"} md:hidden`}
+                      />
+                    )}
+                  </RPressable>
+                </HStack>
+              </TouchableRipple>
             <Divider />
           </VStack>
         </View>

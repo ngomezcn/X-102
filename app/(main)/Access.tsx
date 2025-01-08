@@ -33,7 +33,7 @@ const Access = () => {
 
     } else
     {
-      if (devices && devices.length === 1) {
+      /*if (devices && devices.length === 1) {
 
         try {
           await dispatch(setFocusedDeviceAsync(devices[0])).unwrap();
@@ -44,7 +44,8 @@ const Access = () => {
         }
       } else {
         setIsLoading(false);
-      }
+      }*/
+      setIsLoading(false);
     }
   };
 

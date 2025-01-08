@@ -1,3 +1,5 @@
+import DeviceFeatures from "@/app/(main)/DeviceFeatures";
+import DeviceOptions from "@/app/(main)/DeviceOptions";
 import {
     Plus,
     Home,
@@ -12,6 +14,8 @@ export const AppRoutes = {
     Access: "access",
     
     ScanQR: "scanqr",
+    DeviceOptions: "device-options",
+    DeviceFeatures: "device-features",
     AccessRoutes: {
         DevicesList: "access-devices-list",
         NoDevicesMessage: "access-no-devices-message",
@@ -37,7 +41,7 @@ export interface IBottomTab {
 export const bottomTabs: IBottomTab[] = [
     {
         id: AppRoutes.Add,
-        label: "Añádir",
+        label: "Añadir",
         disabled: false,
         icon: Plus,
     },

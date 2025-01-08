@@ -65,7 +65,7 @@ export const ModalQrManager = () => {
                         <BadgeText>Recomendado</BadgeText>
                     </Badge>
                 </HStack>
-                <RPressable onPress={() => NavigationService.navigate(AppRoutes.ScanQR)}>
+                <RPressable onPress={() => handlePress()}>
 
                     {({ pressed }) => (
                         <Icon

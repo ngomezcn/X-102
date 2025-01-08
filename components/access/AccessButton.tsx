@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "@/components/ui/icon";
-import { Check, CircleX, Power } from "lucide-react-native";
+import { Bluetooth, BluetoothOff, Check, CircleSlash, CircleX, Frown, Power } from "lucide-react-native";
 import { MotiView } from 'moti';
 import { View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
@@ -23,13 +23,13 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
     const getButtonStyles = () => {
         switch (buttonState) {
             case ButtonStates.loading:
-                return { backgroundColor: '#1E90FF' }; // Color azul durante loading
+                return { backgroundColor: '#FFFFFF' }; // Color azul durante loading
             case ButtonStates.success:
-                return { backgroundColor: '#00A36C' };
+                return { backgroundColor: '#FFFFFF' };
             case ButtonStates.error:
-                return { backgroundColor: 'red' };
+                return { backgroundColor: '#FFFFFF' };
             default:
-                return { backgroundColor: 'grey' }; // Color gris para idle
+                return { backgroundColor: '#FFFFFF' }; // Color gris para idle
         }
     };
 
@@ -40,8 +40,8 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
                     [...Array(3).keys()].map((index) => (
                         <MotiView
                             key={index}
-                            from={{ opacity: 0.7, scale: 1 }}
-                            animate={{ opacity: 0, scale: 4 }}
+                            from={{ opacity: 0.5, scale: 1.5 }}
+                            animate={{ opacity: 0, scale: 6 }}
                             transition={{
                                 type: 'timing',
                                 duration: 2000,
@@ -83,13 +83,26 @@ export const AccessButton: React.FC<AccessButtonProps> = ({ onClickButton, butto
                     rippleColor="rgba(255, 255, 255, 0.3)"
                 >
                     {buttonState === ButtonStates.loading ? (
-                        <Spinner className="h-[145%] w-[145%]" color={'#FFFFFF'} /> // Muestra el spinner en lugar del ícono
+                        <Icon className="h-[45%] w-[45%]" color={'#42A5F5'} as={Bluetooth} strokeWidth={2} />
                     ) : buttonState === ButtonStates.success ? (
-                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={Check} />
+                        <Icon className="h-[45%] w-[45%]" color={'#4CAF50'} as={Check} strokeWidth={2} />
                     ) : buttonState === ButtonStates.error ? (
-                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={CircleX} />
+                        <Icon className="h-[45%] w-[45%]" color={'#F44336'} as={BluetoothOff} strokeWidth={1} />
                     ) : (
-                        <Icon className="h-[45%] w-[45%]" color={'#FFFFFF'} as={Power} />
+
+                        <MotiView
+                            from={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{
+                                type: "timing",
+                                duration: 800,
+                            }}
+                            style={{ justifyContent: "center", alignItems: "center" }}
+                        >
+                            {<Power color="#3b444b" size={120} strokeWidth={2} />
+                            }
+                        </MotiView>
                     )}
 
                 </TouchableRipple>
