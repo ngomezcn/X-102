@@ -9,9 +9,9 @@ import {
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { RootState } from "@/store/store";
-import { Boxes, PenBox, Power, ScrollText, type LucideIcon } from "lucide-react-native";
-import React, { useState } from "react";
-import { Pressable as RPressable, View } from 'react-native';
+import { Boxes, PenBox, Power, ScrollText, Settings2, type LucideIcon } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Pressable as RPressable, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useDispatch, useSelector } from "react-redux";
 import { useToastUtil } from "../ToastUtil";
@@ -20,15 +20,15 @@ import { Easing } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
 import { AccessButton, ButtonStates } from "./AccessButton";
 import { Device } from "react-native-ble-plx";
-import { useBLEService } from '@/hooks/useBLEService'; // Asegúrate de ajustar la ruta
 import { Base64 } from 'js-base64';
 import log from "@/utils/logger";
 import { IotDevice } from "@/models/IoTDevice";
 import { BLESpecifications } from "@/models/Specifications";
-
-interface SingleDeviceProps {
-  iotDevice: IotDevice;
-}
+import { RootState as ReduxRootState } from '@/store/store';
+import { useFocusEffect } from "expo-router";
+import { useHeading } from "@/hooks/useHeading";
+import { AppRoutes } from "@/constants/AppRoutes";
+import { BleHandler } from "@/services/BLEServiceInstance";
 
 interface ListEntriesType {
   iconName: LucideIcon | typeof UIIcon;
@@ -38,20 +38,20 @@ interface ListEntriesType {
 
 const listEntries: ListEntriesType[] = [
   {
-    iconName: PenBox,
-    subText: "Modificar",
+    iconName: Settings2,
+    subText: "Opciones",
     endIcon: ChevronRightIcon,
   },
   {
     iconName: Boxes,
     subText: "Funcionalidades",
     endIcon: ChevronRightIcon,
-  },
-  {
+  }
+  /*,{
     iconName: ScrollText,
     subText: "Registro",
     endIcon: ChevronRightIcon,
-  }
+  }*/
 ];
 
 const DashboardLayout = (props: any) => {
@@ -71,25 +71,52 @@ const DashboardLayout = (props: any) => {
   );
 };
 
-export const AccessDevice: React.FC<SingleDeviceProps> = ({ iotDevice }) => {
 
+export const AccessDevice = () => {
+  const [isReady, setIsReady] = useState(false);
+  const iotDevice = (useSelector((state: ReduxRootState) => state.focusedDevice.device))! as IotDevice;
+  const devices = useSelector((state: ReduxRootState) => state.device.devices);
+  const { setHeaderSettings } = useHeading();
   const { showToast } = useToastUtil();
-
   const [buttonState, setButtonState] = useState<string>(ButtonStates.idle); // Estado del botón
-
-  const BLEService = useBLEService(); // Usamos el servicio BLE
-
   const serviceUUID = '4c491e6a-38df-4d0f-b04b-8704a40071ce'; // Reemplaza con tu UUID de servicio
   const characteristicUUID = 'b0726341-e52e-471b-9cd6-4061e54616cc'; // Reemplaza con tu UUID de característica
+  let bleHandler : BleHandler;
+
+  useEffect(() => {
+    if (iotDevice) {
+
+      setIsReady(true);
+    }
+  }, [iotDevice]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+
+      if (devices) {
+        if (devices.length === 1) {
+          setHeaderSettings({
+            heading: "Acceso",
+            isIconVisible: true,
+            isHeaderVisible: true,
+            isLeftArrowVisible: false,
+            goBackRoute: null,
+          });
+        } else {
+          setHeaderSettings({
+            heading: "Acceso",
+            isIconVisible: true,
+            isHeaderVisible: true,
+            isLeftArrowVisible: true,
+            goBackRoute: AppRoutes.Access,
+          });
+        }
+      }
+    }, [])
+  );
 
   const handleButtonClick = async () => {
-
-    console.log("iotDevice")
-    console.log(iotDevice)
-
     if (buttonState === ButtonStates.loading) return;
-
-    setButtonState(ButtonStates.loading);
 
     try {
 
@@ -97,46 +124,54 @@ export const AccessDevice: React.FC<SingleDeviceProps> = ({ iotDevice }) => {
 
       if (iotDevice.specifications?.type === 'BLE') {
 
-        const granted = await BLEService.requestBluetoothPermissions();
+        setButtonState(ButtonStates.loading);
+
+        bleHandler = new BleHandler()
+
+        const granted = await bleHandler.requestBluetoothPermissions();
+        bleHandler.resetManager();
 
         if (granted) {
 
           const bleSpecs = iotDevice.specifications as BLESpecifications;
           const macAddress = bleSpecs.mac!;
 
-          BLEService.setMac(macAddress);
+          bleHandler.setMac(macAddress);
 
-          await BLEService.scanForDevice();
-          await BLEService.connectToDevice();
+          await bleHandler.scanForDevice();
+          await bleHandler.connectToDevice();
 
           const command = Base64.encode('AK=' + bleSpecs.accessKey);
-          await BLEService.sendCommand(serviceUUID, characteristicUUID, command);
+          await bleHandler.sendCommand(serviceUUID, characteristicUUID, command);
 
-          const data = await BLEService.receiveDataFromDevice(serviceUUID, characteristicUUID);
+          const response = await bleHandler.receiveDataFromDevice(serviceUUID, characteristicUUID);
 
-          await BLEService.disconnect();
-
-          if (data.includes("OK")) {
+          if (response.includes("OK")) {
             setButtonState(ButtonStates.success);
           } else {
             setButtonState(ButtonStates.error);
           }
 
         } else {
-          setButtonState(ButtonStates.idle);
-          await BLEService.disconnect();
+          //....
         }
 
       } else {
         console.warn('El dispositivo no es de tipo BLE, no se puede obtener la dirección MAC.');
       }
 
-
-    } catch (error: any) {
-      log.error("error " + error);
-      setButtonState('error');
+    } catch (error) {
+      log.error(error);
+      setButtonState(ButtonStates.error);
+    } finally {
+      await bleHandler.disconnect();
+      await bleHandler.destroy(); 
+      //setButtonState(ButtonStates.idle); 
     }
   };
+
+
+
 
   return (
     <DashboardLayout title="Acceso">

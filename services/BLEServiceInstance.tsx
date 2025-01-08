@@ -1,4 +1,3 @@
-
 import { BleManager, Device, Characteristic, BleError } from 'react-native-ble-plx';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -6,7 +5,7 @@ import log from '../utils/logger';
 import { Base64 } from 'js-base64';
 import PermissionsService from './PermissionsService';
 
-class BLEServiceInstance {
+export class BleHandler {
   private manager: BleManager;
   private device: Device | null;
   private macAddress: string | null;
@@ -15,51 +14,61 @@ class BLEServiceInstance {
     this.manager = new BleManager();
     this.device = null;
     this.macAddress = null;
+    log.debug('BLEServiceInstance inicializado.');
+  }
+
+  public resetManager(): void {
+    this.manager.destroy(); // Destruye el estado interno
+    this.manager = new BleManager(); // Crea una nueva instancia limpia
   }
 
   // 1. Setear la MAC del dispositivo
   public setMac(macAddress: string): void {
     this.macAddress = macAddress;
+    log.debug(`MAC Address seteada: ${macAddress}`);
   }
 
   // 2. Pedir permisos de Bluetooth (necesario para Android)
   async requestBluetoothPermissions(): Promise<boolean> {
+      log.debug('Solicitando permisos de Bluetooth...');
       const allPermissionsGranted = await PermissionsService.requestAllPermissions();
+      log.debug(`Permisos otorgados: ${allPermissionsGranted}`);
       return allPermissionsGranted;
   }
 
   public async scanForDevice() {
-    log.debug('Starting scan for devices');
-
+    log.debug('Iniciando escaneo para dispositivos');
+  
     return new Promise<Device>((resolve, reject) => {
-      
-      let deviceFound = false; // Para indicar si se encontró el dispositivo
+      let found = false;
       const timeout = setTimeout(() => {
-        if (!deviceFound) {
+        if (!found) {
+          log.debug('Tiempo límite alcanzado. Finalizando escaneo.');
           this.manager.stopDeviceScan();
-          const error = 'No device found within the timeout';
-          log.debug(error);
-          reject(new Error(error));
+          reject(new Error('No se encontró el dispositivo dentro del tiempo límite'));
         }
-      }, 10000); // Esperar 10 segundos (10000 ms)
-
+      }, 15000); // 10 segundos de espera
+  
       this.manager.startDeviceScan(null, null, (error, device) => {
+        log.debug('Escaneo en progreso...');
+
         if (error) {
-          clearTimeout(timeout); // Limpiar el timeout si hay error
+          log.error('Error durante el escaneo:', error);
+          clearTimeout(timeout);
           this.manager.stopDeviceScan();
-          log.debug(`Error during scan: ${error.message}`);
           reject(error);
           return;
         }
+  
+        log.debug(`Dispositivo detectado: ${device?.name || 'Desconocido'}, ID: ${device?.id}`);
 
         if (device && device.id === this.macAddress) {
-          log.debug(`Device found: ${device.id}`);
-          deviceFound = true; // Marcar que el dispositivo fue encontrado
+          log.debug(`Dispositivo encontrado: ${device.name || 'Desconocido'}, ID: ${device.id}`);
+          found = true;
+          clearTimeout(timeout);
           this.manager.stopDeviceScan();
           this.device = device;
-          clearTimeout(timeout); // Limpiar el timeout si se encuentra el dispositivo
-
-          resolve(device); // Resuelve la promesa con el dispositivo encontrado
+          resolve(device);
         }
       });
     });
@@ -67,23 +76,23 @@ class BLEServiceInstance {
 
   public async receiveDataFromDevice(serviceUUID: string, characteristicUUID: string): Promise<string> {
     if (!this.device) {
+      log.error('Intento de recibir datos sin dispositivo conectado.');
       throw new Error('No hay dispositivo conectado');
     }
   
     try {
-      // Leer la característica especificada del dispositivo BLE
+      log.debug(`Leyendo característica: Servicio: ${serviceUUID}, Característica: ${characteristicUUID}`);
       const characteristic: Characteristic = await this.device.readCharacteristicForService(
         serviceUUID, 
         characteristicUUID
       );
       
-      // Decodificar los datos de base64 a texto
       const decodedData = Base64.decode(characteristic.value || '');
-      
       log.debug(`Datos recibidos de ${characteristicUUID}: ${decodedData}`);
       
       return decodedData;
     } catch (error) {
+      log.error('Error al recibir datos:', error);
       if (error instanceof BleError) {
         throw new Error(
           `Error al recibir datos: Código: ${error.errorCode}, Razón: ${error.reason}`
@@ -97,30 +106,40 @@ class BLEServiceInstance {
   // 4. Conectarse al dispositivo
   public async connectToDevice(): Promise<Device> {
     if (!this.device) {
+      log.error('Intento de conectar sin dispositivo disponible.');
       throw new Error('No hay dispositivo disponible para conectar');
     }
-
+  
     try {
+      log.debug('Intentando conectar al dispositivo...');
+      await this.disconnect();
       const connectedDevice = await this.device.connect();
-
+      log.debug('Conexión establecida. Descubriendo servicios y características...');
       await connectedDevice.discoverAllServicesAndCharacteristics();
-      const services = await connectedDevice.services();
-      log.info("XDDDDDD")
-      log.info(services)
-
+  
+      this.manager.onDeviceDisconnected(connectedDevice.id, (error, device) => {
+        if (error) {
+          log.error(`Desconexión inesperada del dispositivo ${device?.id || 'desconocido'}:`, error);
+        } else {
+          log.debug(`El dispositivo ${device?.id || 'desconocido'} se ha desconectado.`);
+        }
+        this.device = null;
+      });
+  
       this.device = connectedDevice;
+      log.debug('Dispositivo conectado y listo.');
       return connectedDevice;
     } catch (error) {
-      // Manejamos el error si es de tipo BleError
+      log.error('Error al conectar con el dispositivo:', error);
       if (error instanceof BleError) {
         throw new Error(
           `Error al conectar con el dispositivo: Código: ${error.errorCode}, Razón: ${error.reason}`
         );
-      } else {
-        throw new Error('Error desconocido al conectar con el dispositivo');
       }
+      throw new Error('Error desconocido al conectar con el dispositivo');
     }
   }
+  
 
   // 5. Enviar un string y esperar respuesta del dispositivo
   public async sendCommand(
@@ -129,21 +148,19 @@ class BLEServiceInstance {
     command: string
   ): Promise<string> {
     if (!this.device) {
+      log.error('Intento de enviar comando sin dispositivo conectado.');
       throw new Error('No hay dispositivo conectado');
     }
 
     try {
-      // Escribimos el comando en el dispositivo
-      console.info('Enviando...');
-
+      log.debug(`Enviando comando: ${command} al servicio ${serviceUUID}, característica ${characteristicUUID}`);
       await this.device.writeCharacteristicWithResponseForService(
         serviceUUID, characteristicUUID, command
       );
-      console.info('Comando enviado con éxito');
-
-     return ""
+      log.debug('Comando enviado con éxito.');
+      return "";
     } catch (error) {
-      // Manejamos el error si es de tipo BleError
+      log.error('Error al enviar comando:', error);
       if (error instanceof BleError) {
         throw new Error(
           `Error al enviar comando: Código: ${error.errorCode}, Razón: ${error.reason}`
@@ -154,34 +171,22 @@ class BLEServiceInstance {
     }
   }
 
-  async disconnect() {
-    log.debug('Attempting to disconnect from device');
-
-    if (!this.device) {
-      log.debug('No device currently connected');
-      return; // Si no hay un dispositivo conectado, simplemente retornamos
-    }
-
-    try {
-      await this.device.cancelConnection();
-      log.debug(`Device ${this.device.id} disconnected successfully`);
-      this.device = null; // Limpiamos el estado del dispositivo
-    } catch (error) {
-      log.debug(`Error while disconnecting from device: ${error}`);
-      throw error; // Opcional: Lanzamos el error si es necesario manejarlo en otra parte
+  public async disconnect(): Promise<void> {
+    if (this.device) {
+      try {
+        await this.device.cancelConnection();
+        log.debug(`Dispositivo ${this.device.id} desconectado con éxito`);
+        this.device = null;
+      } catch (error) {
+        log.error('Error al desconectar el dispositivo:', error);
+      }
     }
   }
 
-  destroy() {
+  public destroy(): void {
     if (this.device) {
-      log.debug('Disconnect BLE');
-      this.disconnect()
+      this.disconnect();
     }
-
-    log.debug('Destroying BLE manager');
     this.manager.destroy();
   }
 }
-
-// Exportar una instancia del servicio BLE
-export const BLEService = new BLEServiceInstance();

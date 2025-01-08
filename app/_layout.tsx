@@ -10,6 +10,8 @@ import store, { persistor } from '../store/store';
 import AppContainer from './AppContainer';
 import { Text } from '@/components/ui/text';
 import { HeadingProvider } from '@/hooks/useHeading';
+import { useSelector } from 'react-redux';
+import { RootState as ReduxRootState } from '@/store/store';
 
 LogBox.ignoreAllLogs(false);
 

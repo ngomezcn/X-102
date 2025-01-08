@@ -4,9 +4,11 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import deviceReducer from '@/store/slices/deviceSlice';
 import deviceWizardReducer from '@/store/slices/deviceWizardSlice';
+import focusedDeviceReducer from '@/store/slices/focusedDeviceSlice';
+import { useDispatch as useReduxDispatch } from 'react-redux';
 
 const persistConfig = {
-  key: '22220241',
+  key: 'ARR22220241',
   storage: AsyncStorage,
 };
 
@@ -14,6 +16,7 @@ const persistedDeviceReducer = persistReducer(persistConfig, deviceReducer);
 
 const store = configureStore({
   reducer: {
+    focusedDevice: focusedDeviceReducer,      
     device: persistedDeviceReducer,      
     wizard: deviceWizardReducer,   
   },
@@ -25,6 +28,8 @@ const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useDispatch = () => useReduxDispatch<AppDispatch>();
 
 export const persistor = persistStore(store);
 
