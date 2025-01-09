@@ -33,7 +33,7 @@ export const useHeading = (): HeadingContextType => {
 // Proveedor del contexto
 export const HeadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
-    const [heading, setHeading] = useState<string>("Smart Gate");
+    const [heading, setHeading] = useState<string>("Gate Link");
     const [isIconVisible, setIconVisible] = useState<boolean>(true);
     const [isHeaderVisible, setHeaderVisible] = useState<boolean>(true);
     const [isLeftArrowVisible, setLeftArrowVisible] = useState<boolean>(true);

@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'Smart Gate'
+rootProject.name = 'Gate Link'
 
 dependencyResolutionManagement {
   versionCatalogs {

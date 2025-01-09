@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Smart Gate",
+    "name": "Gate Link",
     "slug": "SmartGateApp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logo-grayscale.png",
     "scheme": "myapp",

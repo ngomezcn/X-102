@@ -94,25 +94,13 @@ export const AccessDevice = () => {
   useFocusEffect(
     React.useCallback(() => {
 
-      if (devices) {
-        if (devices.length === 1) {
-          setHeaderSettings({
-            heading: "Acceso",
-            isIconVisible: true,
-            isHeaderVisible: true,
-            isLeftArrowVisible: false,
-            goBackRoute: null,
-          });
-        } else {
-          setHeaderSettings({
-            heading: "Acceso",
-            isIconVisible: true,
-            isHeaderVisible: true,
-            isLeftArrowVisible: true,
-            goBackRoute: AppRoutes.Access,
-          });
-        }
-      }
+      setHeaderSettings({
+        heading: "Acceso",
+        isIconVisible: true,
+        isHeaderVisible: true,
+        isLeftArrowVisible: true,
+        goBackRoute: AppRoutes.Access,
+      });
     }, [])
   );
 
